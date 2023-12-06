@@ -26,17 +26,28 @@
     rgb(var(--background-start-rgb));
 } */
 
-
 .customTH {
-  color: gray;
+  color: rgb(89, 84, 84);
+  border: 1px solid #e2e8f0;
+  font-size: large;
+  letter-spacing: 0.5px;
+  padding: 5px;
 }
 
+.customTD {
+  border: 1px solid #e2e8f0;
+  font-size: large;
+  letter-spacing: 0.5px;
+  padding: 5px;
+}
+.customTR:hover {
+  background-color: lightgray;
+}
 tr:nth-child(odd) {
-  background-color: #f2f2f2; /* or any other background color */
+  background-color: #f2f2f2;
 }
 
-
-/* For Booking */
+/* 
 .table {
   border: 1px solid #424242;
 }
@@ -93,4 +104,4 @@ tr:nth-child(odd) {
 
 *:hover > .resizer {
   opacity: 1;
-}
+} */
