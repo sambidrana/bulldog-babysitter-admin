@@ -9,7 +9,7 @@ const Nav = () => {
         <h1>LOGO</h1>
         <nav className="flex flex-col gap-3 p-8 mt-10">
           <Link href={"/"}>Bookings</Link>
-          <Link href={"/members"}>Members</Link>
+          <Link href={"/boarding"}>Boarding</Link>
           <div>
             <button onClick={() => signOut()}>LogOut</button>
           </div>

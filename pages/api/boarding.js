@@ -59,7 +59,11 @@ export default async function handleBoarding(req, res) {
 
   if (method === "GET") {
     try {
-      res.json(await Boarding.find().sort({ createdAt: -1 }));
+      if (req.query?.id) {
+        res.json(await Boarding.findOne({ _id: req.query.id }));
+      } else {
+        res.json(await Boarding.find().sort({ createdAt: -1 }));
+      }
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch boarding details." });
     }

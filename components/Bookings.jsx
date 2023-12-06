@@ -16,14 +16,13 @@ const columns = [
     accessorKey: "firstName",
     header: "Owner",
     size: 225,
+    enableSorting: false,
     cell: (props) => <p>{props.getValue()}</p>,
-    // cell: (props) => (
-    //   <p>{props?.row?.original?.associatedBoarding?.firstName}</p>
-    // ),
   },
   {
     accessorKey: "petName",
     header: "Pet Name",
+    enableSorting: false,
     cell: (props) => <p>{props.getValue()}</p>,
     // cell: (props) => <p>{props?.row?.original?.associatedBoarding?.petName}</p>,
   },
@@ -189,9 +188,7 @@ const Bookings = () => {
         <div>
           <button
             className={`p-2 pr-4 pl-4 text-lg border rounded-md hover:bg-gray-100 hover:text-white ${
-              table.getCanPreviousPage()
-                ? ""
-                : "cursor-not-allowed"
+              table.getCanPreviousPage() ? "" : "cursor-not-allowed"
             }`}
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -200,9 +197,7 @@ const Bookings = () => {
           </button>
           <button
             className={`p-2 pr-4 pl-4 text-lg border rounded-md hover:bg-gray-100 hover:text-white ${
-              table.getCanNextPage()
-                ? ""
-                : "cursor-not-allowed"
+              table.getCanNextPage() ? "" : "cursor-not-allowed"
             }`}
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}

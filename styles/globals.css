@@ -26,6 +26,17 @@
     rgb(var(--background-start-rgb));
 } */
 
+
+.customTH {
+  color: gray;
+}
+
+tr:nth-child(odd) {
+  background-color: #f2f2f2; /* or any other background color */
+}
+
+
+/* For Booking */
 .table {
   border: 1px solid #424242;
 }
@@ -33,6 +44,7 @@
 .tr {
   display: flex;
   width: fit-content;
+  text-align: center;
 }
 
 .th,
