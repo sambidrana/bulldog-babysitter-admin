@@ -1,10 +1,11 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Nav = () => {
   const router = useRouter();
   const inactiveLink = "flex gap-1 p-2 pr-4 pl-4 ";
-  const activeLink = `${inactiveLink} bg-gray-100 text-black  rounded-lg`;
+  const activeLink = `${inactiveLink} bg-gray-100 text-black  rounded-lg shadow-lg`;
 
   return (
     <>
@@ -19,6 +20,12 @@ const Nav = () => {
             className={router.asPath.startsWith("/boarding") ? activeLink : inactiveLink}
           >
             Boarding
+          </Link>
+          <Link
+            href="/enquiries"
+            className={router.asPath.startsWith("/enquiries") ? activeLink : inactiveLink}
+          >
+            Enquiries
           </Link>
           <div className={inactiveLink}>
             <button onClick={() => signOut()}>LogOut</button>

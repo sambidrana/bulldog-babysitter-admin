@@ -47,9 +47,10 @@ tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
 
-/* 
+
+
 .table {
-  border: 1px solid #424242;
+  border: 0.5px solid #b3aeae;
 }
 
 .tr {
@@ -60,7 +61,12 @@ tr:nth-child(odd) {
 
 .th,
 .td {
-  box-shadow: inset 0 0 0 1px #424242;
+  /* box-shadow: inset 0 0 0 1px #b3aeae; */
+  /* border: 1px solid black; */
+  border-bottom: 1px solid gray;
+  border-right: 0.5px solid gray;
+  padding: 10px;
+  overflow: hidden;
 }
 
 .th {
@@ -76,12 +82,7 @@ tr:nth-child(odd) {
   text-align: center;
 }
 
-.td > input {
-  margin: 1rem;
-  padding: 0.2rem;
-  background: transparent;
-  max-width: 100%;
-}
+
 
 .resizer {
   position: absolute;
@@ -98,10 +99,10 @@ tr:nth-child(odd) {
 }
 
 .resizer.isResizing {
-  background: #2eff31;
+  background: #0880b8;
   opacity: 1;
 }
 
 *:hover > .resizer {
   opacity: 1;
-} */
+}

@@ -8,28 +8,30 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { getValue } from "@mui/system";
 import Filters from "./Filters";
-// import { getValue } from "@mui/system";
+import Link from "next/link";
 const columns = [
   {
     accessorKey: "firstName",
     header: "Owner",
-    size: 225,
     enableSorting: false,
-    cell: (props) => <p>{props.getValue()}</p>,
+    cell: (props) => (
+      <Link href={`/boarding/view/${props.row.original._id}`}>
+        {`${props.row.original.firstName} ${props.row.original.lastName}`}
+      </Link>
+    ),
   },
   {
     accessorKey: "petName",
     header: "Pet Name",
     enableSorting: false,
-    cell: (props) => <p>{props.getValue()}</p>,
+    cell: (props) => <p style={{ color: "blue" }}>{props.getValue()}</p>,
     // cell: (props) => <p>{props?.row?.original?.associatedBoarding?.petName}</p>,
   },
   {
     accessorKey: "startDate",
     header: "Start Date",
-    cell: (props) => <p>{props.getValue()}</p>,
+    cell: (props) => <p style={{ color: "green" }}>{props.getValue()}</p>,
   },
   {
     accessorKey: "startTime",
@@ -39,7 +41,7 @@ const columns = [
   {
     accessorKey: "endDate",
     header: "End Date",
-    cell: (props) => <p>{props.getValue()}</p>,
+    cell: (props) => <p style={{ color: "red" }}>{props.getValue()}</p>,
   },
   {
     accessorKey: "endTime",
@@ -88,12 +90,6 @@ const Bookings = () => {
     });
   }
 
-  // Resulting array of bookings with associated boarding details
-  // const bookingsWithBoarding = associateBookingsWithBoarding(
-  //   bookings,
-  //   boarding
-  // );
-
   useEffect(() => {
     const updatedBookingsWithBoarding = associateBookingsWithBoarding(
       bookings,
@@ -121,11 +117,11 @@ const Bookings = () => {
   //   const user = boarding[booking.userId];
   //   return user ? { firstName: user.firstName, lastName: user.lastName } : null;
   // });
-  console.log(columnFilters);
-  console.log(table.getHeaderGroups());
+  // console.log(columnFilters);
+  // console.log(table.getHeaderGroups());
   return (
     <>
-      <div className="mt-8">
+      <div className="mt-8 pl-10 pr-10">
         <Filters
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
@@ -211,41 +207,3 @@ const Bookings = () => {
 };
 
 export default Bookings;
-
-/*
-<div className="mt-8">
-        <h1>Bookings</h1>
-        <table className="w-full mt-6 text-left rounded shadow-sm">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th>By</th>
-              <th>Start Date</th>
-              <th>Start Time</th>
-              <th>End Date</th>
-              <th>End Time</th>
-              <th>Pet Name</th>
-            </tr>
-          </thead>
-          {bookingsWithBoarding.map((booking, index) => (
-            <tbody key={index}>
-              <tr>
-                <td>
-                  {booking.associatedBoarding
-                    ? `${booking.associatedBoarding.firstName} ${booking.associatedBoarding.lastName}`
-                    : "Unknown User"}
-                </td>
-                <td>{booking.startDate}</td>
-                <td>{booking.startTime}</td>
-                <td>{booking.endDate}</td>
-                <td>{booking.endTime}</td>
-                <td>
-                  {booking.associatedBoarding
-                    ? booking.associatedBoarding.petName
-                    : "Unknown Pet"}
-                </td>
-              </tr>
-            </tbody>
-          ))}
-        </table>
-      </div>
-*/

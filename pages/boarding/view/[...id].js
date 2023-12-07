@@ -7,6 +7,7 @@ import Link from "next/link";
 const View = () => {
   const [memberInfo, setMemberInfo] = useState(null); // Change initial state to null
   const router = useRouter();
+  console.log(router);
   const { id } = router.query;
   useEffect(() => {
     if (!id) return;
@@ -26,14 +27,16 @@ const View = () => {
       </Layout>
     );
   }
-
+  const handleGoBack = () => {
+    router.back();
+  };
   return (
     <Layout>
-      <div className="mt-10 ml-10">
-        <table className="w-full mt-6 text-left rounded shadow-sm">
+      <div className="mt-10 ml-10 ">
+        <table className="w-full mt-6 text-left rounded shadow-sm ">
           <tbody>
             <tr>
-              <td className="pt-5 text-2xl pb-4 pl-5 font-semibold text-gray-500 bg-white">
+              <td className="pt-5 text-2xl pb-4 pl-5 font-semibold text-gray-500  bg-[#f4f2eb]">
                 Owner's Information
               </td>
             </tr>
@@ -53,7 +56,7 @@ const View = () => {
             </tr>
 
             <tr>
-              <td className="pt-10 text-2xl pb-4 pl-5 font-semibold text-gray-500 bg-white">
+              <td className="pt-10 text-2xl pb-4 pl-5 font-semibold text-gray-500  bg-[#f4f2eb]">
                 Dog's Details
               </td>
             </tr>
@@ -93,12 +96,12 @@ const View = () => {
           </tbody>
         </table>
         <div className="mt-7">
-          <Link
-            href={"/boarding"}
-            className=" text-gray-400 border border-gray-400 rounded-md p-2 pl-4 pr-4 hover:border-white hover:bg-slate-400 hover:text-white"
+          <button
+            onClick={handleGoBack}
+            className="text-gray-400 border border-gray-400 rounded-md p-2 pl-4 pr-4 hover:border-white hover:bg-slate-400 hover:text-white"
           >
             Back
-          </Link>
+          </button>
         </div>
       </div>
     </Layout>
