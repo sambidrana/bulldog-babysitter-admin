@@ -35,7 +35,7 @@
 }
 
 .customTD {
-  border: 1px solid #e2e8f0;
+  border: 1px solid white;
   font-size: large;
   letter-spacing: 0.5px;
   padding: 5px;
@@ -80,6 +80,7 @@ tr:nth-child(odd) {
   font-size: xs;
   text-transform: uppercase;
   text-align: center;
+  background-color: rgba(178, 173, 173, 0.551);
 }
 
 
