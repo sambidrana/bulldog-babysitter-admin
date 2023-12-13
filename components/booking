@@ -11,76 +11,90 @@ import {
 } from "@tanstack/react-table";
 import Filters from "./Filters";
 import Link from "next/link";
-import ConfirmDialog from "./ConfirmDialog";
+import IndeterminateCheckbox from "./IndeterminateCheckbox";
+
+// Import IndeterminateCheckbox implementation or replace it with your own
+// const IndeterminateCheckbox = ({ checked, indeterminate, onChange }) => (
+//   <input
+//     type="checkbox"
+//     checked={checked}
+//     indeterminate={indeterminate}
+//     onChange={onChange}
+//   />
+// );
+const columns = [
+  {
+    id: "select",
+    header: "",
+    size: 75,
+    cell: ({ row }) => {
+      console.log("Row Properties:", row);
+      return (
+        <div className="px-1">
+          <IndeterminateCheckbox
+            checked={row.isSelected}
+            disabled={!row.getCanSelect()}
+            indeterminate={row.getIsSomeSelected()}
+            onChange={() => row.toggleSelected()}
+          />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "firstName",
+    header: "Owner",
+    enableSorting: false,
+    cell: (props) => (
+      <Link href={`/boarding/view/${props.row.original._id}`}>
+        {`${props.row.original.firstName} ${props.row.original.lastName}`}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "petName",
+    header: "Pet Name",
+    enableSorting: false,
+    cell: (props) => <p style={{ color: "blue" }}>{props.getValue()}</p>,
+    // cell: (props) => <p>{props?.row?.original?.associatedBoarding?.petName}</p>,
+  },
+  {
+    accessorKey: "startDate",
+    header: "Start Date",
+    cell: (props) => <p style={{ color: "green" }}>{props.getValue()}</p>,
+  },
+  {
+    accessorKey: "startTime",
+    header: "Start Time",
+    cell: (props) => <p>{props.getValue()}</p>,
+  },
+  {
+    accessorKey: "endDate",
+    header: "End Date",
+    cell: (props) => <p style={{ color: "red" }}>{props.getValue()}</p>,
+  },
+  {
+    accessorKey: "endTime",
+    header: "End Time",
+    cell: (props) => <p>{props.getValue()}</p>,
+  },
+  {
+    accessorKey: "updatedAt",
+    header: "Booked At",
+    cell: (props) => {
+      const createdAt = new Date(props.getValue());
+      const formattedEndTime = `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`; // Adjust the format as needed
+      return <p>{formattedEndTime}</p>;
+    },
+  },
+];
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [boarding, setBoarding] = useState([]);
   const [bookingsWithBoarding, setBookingsWithBoarding] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
-  const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [selectedBookingId, setSelectedBookingId] = useState(null);
-
-  const columns = [
-    {
-      accessorKey: "firstName",
-      header: "Owner",
-      enableSorting: false,
-      cell: (props) => (
-        <Link href={`/boarding/view/${props.row.original._id}`}>
-          {`${props.row.original.firstName} ${props.row.original.lastName}`}
-        </Link>
-      ),
-    },
-    {
-      accessorKey: "petName",
-      header: "Pet Name",
-      enableSorting: false,
-      cell: (props) => <p style={{ color: "blue" }}>{props.getValue()}</p>,
-      // cell: (props) => <p>{props?.row?.original?.associatedBoarding?.petName}</p>,
-    },
-    {
-      accessorKey: "startDate",
-      header: "Start Date",
-      cell: (props) => <p style={{ color: "green" }}>{props.getValue()}</p>,
-    },
-    {
-      accessorKey: "startTime",
-      header: "Start Time",
-      cell: (props) => <p>{props.getValue()}</p>,
-    },
-    {
-      accessorKey: "endDate",
-      header: "End Date",
-      cell: (props) => <p style={{ color: "red" }}>{props.getValue()}</p>,
-    },
-    {
-      accessorKey: "endTime",
-      header: "End Time",
-      cell: (props) => <p>{props.getValue()}</p>,
-    },
-    {
-      accessorKey: "updatedAt",
-      header: "Booked On",
-      cell: (props) => {
-        const createdAt = new Date(props.getValue());
-        const formattedEndTime = `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`; // Adjust the format as needed
-        return <p>{formattedEndTime}</p>;
-      },
-    },
-    {
-      id: "complete",
-      header: "Complete",
-      cell: ({ row }) => (
-        <button
-          className="bg-green-500 text-white px-2 py-1 rounded-md"
-          onClick={() => handleComplete(row.original.bookingId)}
-        >
-          Complete
-        </button>
-      ),
-    },
-  ];
+  const [selectedRowIds, setSelectedRowIds] = useState({});
 
   useEffect(() => {
     // Fetch user bookings
@@ -89,7 +103,7 @@ const Bookings = () => {
       .then((res) => {
         const bookingData = res.data;
         setBookings(bookingData);
-        console.log(bookingData);
+        // console.log(bookingData);
 
         // Fetch user information and create a mapping by userId
         axios
@@ -135,8 +149,10 @@ const Bookings = () => {
     columns,
     state: {
       columnFilters,
+      rowSelection: selectedRowIds,
     },
     enableRowSelection: true,
+    onRowSelectionChange: setSelectedRowIds,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -144,46 +160,26 @@ const Bookings = () => {
     columnResizeMode: "onChange",
   });
 
-  const handleComplete = async (bookingId) => {
-    // Open the confirmation dialog and set the selected booking ID
-    setSelectedBookingId(bookingId);
-    setConfirmDialogOpen(true);
+  const handleDelete = () => {
+    // Get the IDs of selected rows
+    const selectedIds = Object.keys(selectedRowIds);
+
+    // Perform the deletion logic, e.g., call your API to delete the rows
+    // You can use selectedIds to identify the rows to delete
+
+    // For demonstration purposes, log the IDs to the console
+    console.log("Deleting rows with IDs:", selectedIds);
+
+    // Clear the selection after deletion
+    setSelectedRowIds({});
   };
 
-  const closeConfirmDialog = () => {
-    // Close the confirmation dialog
-    setConfirmDialogOpen(false);
-  };
-
-  const confirmAction = async () => {
-    // Close the confirmation dialog
-    setConfirmDialogOpen(false);
-
-    try {
-      // Perform the delete action using axios
-      const completeResponse = await axios.delete(
-        `/api/userbookings?id=${selectedBookingId}`
-      );
-
-      // Check the status code to determine success or failure
-      if (completeResponse.status === 200) {
-        console.log("Booking marked as complete:", selectedBookingId);
-
-        // Fetch the updated bookings and update the state
-        const updatedBookings = await axios.get("/api/userbookings");
-        setBookings(updatedBookings.data);
-      } else {
-        console.error(
-          "Failed to mark booking as complete:",
-          completeResponse.statusText
-        );
-        // Handle error and update UI accordingly
-      }
-    } catch (error) {
-      console.error("Error completing booking:", error);
-      // Handle error and update UI accordingly
-    }
-  };
+  // const bookingDetails = bookings.map((booking) => {
+  //   const user = boarding[booking.userId];
+  //   return user ? { firstName: user.firstName, lastName: user.lastName } : null;
+  // });
+  // console.log(columnFilters);
+  // console.log(table.getHeaderGroups());
   return (
     <>
       <div className="mt-8 pl-10 pr-10">
@@ -277,6 +273,14 @@ const Bookings = () => {
             </div>
           ))}
         </div>
+        <div className="flex justify-end mt-8 mr-24">
+          <button
+            className="p-2 bg-red-600 text-white px-4 rounded-md hover:bg-red-800"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        </div>
         <div>
           <p className="mt-6">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
@@ -304,12 +308,6 @@ const Bookings = () => {
           </button>
         </div>
       </div>
-      <ConfirmDialog
-        isOpen={isConfirmDialogOpen}
-        onClose={closeConfirmDialog}
-        onConfirm={confirmAction}
-        confirmMessage="Are you sure you want to complete this booking?"
-      />
     </>
   );
 };

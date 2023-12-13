@@ -60,7 +60,7 @@ const members = () => {
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
         />
-        <table className="w-full mt-10 rounded shadow-lg text-center bg-[#e9e3d0] ">
+        <table className="w-full mt-10  shadow-lg text-center bg-[#dcdad7] ">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="customTR">

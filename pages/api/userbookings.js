@@ -40,9 +40,19 @@ export default async function handleUserBooking(req, res) {
   }
   if (method === "GET") {
     try {
-      res.json(await UserBooking.find().sort({ createdAt: -1 }));
+      if (req.query?.id) {
+        res.json(await UserBooking.findOne({ _id: req.query.id }));
+      } else {
+        res.json(await UserBooking.find().sort({ createdAt: -1 }));
+      }
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch Bookings." });
+      res.status(500).json({ error: "Failed to fetch boarding details." });
+    }
+  }
+  if (method === "DELETE") {
+    if (req.query?.id) {
+      await UserBooking.deleteOne({ _id: req.query?.id });
+      res.json(true);
     }
   }
 }
