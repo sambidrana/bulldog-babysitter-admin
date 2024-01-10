@@ -28,7 +28,7 @@ export default async function handleEnquiry(req, res) {
   if (method === "POST") {
     const { name, email, contact, message } = req.body;
 
-    const enquiryDoc = await Boarding.create({
+    const enquiryDoc = await Enquiry.create({
       name,
       email,
       contact,

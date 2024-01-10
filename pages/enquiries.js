@@ -1,45 +1,58 @@
 import Layout from "@/components/Layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 const enquiries = () => {
-  const uploadImage = async (e) => {
-    const file = e.target?.files[0]; // Get the first file
-    if (file) {
-      const data = new FormData();
-      data.append("file", file);
+  const [enquiryList, setEnquiryList] = useState([]);
 
-      try {
-        const response = await axios.post("/api/upload", data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log("Upload successful", response.data);
-        // Handle the response here (e.g., show success message or image preview)
-      } catch (error) {
-        console.error("Upload error", error);
-        // Handle the error here (e.g., show error message)
-      }
-    }
-  };
+  useEffect(() => {
+    axios.get("/api/enquiry").then((res) => {
+      setEnquiryList(res.data);
+      console.log(res.data);
+    });
+  }, []);
   return (
-    <Layout>
-      <form>
-        <div>
-          <div>
-            <label>
-              <span>Add a photo</span>
-              <input onChange={uploadImage} type="file" />
-            </label>
+    <>
+      <Layout>
+        <div className=" mx-auto overflow-x-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 font-bold p-4 bg-gray-200 rounded-t-lg">
+            <div className="hidden md:block">Name</div>
+            <div className="hidden md:block">Phone</div>
+            <div className="hidden md:block">Email</div>
+            <div className="hidden md:block">Message</div>
           </div>
+
+          {enquiryList.map((item, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b"
+            >
+              <div className="text-gray-600 font-serif tracking-wide">{item.name}</div>
+              <div className="tracking-wide">
+                <a
+                  href={`tel:${item.contact}`}
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  {item.contact}
+                </a>
+              </div>{" "}
+              <div className="">
+                <a
+                  href={`mailto:${item.email}`}
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  {item.email}
+                </a>
+              </div>{" "}
+              <div className="font-sans" >{item.message}</div>
+            </div>
+          ))}
         </div>
-      </form>
-    </Layout>
+      </Layout>
+    </>
   );
 };
 
 export default enquiries;
-
 
 /*
 {
