@@ -37,6 +37,7 @@ export default async function handleBoarding(req, res) {
       chipNumber,
       vaccines,
       petNotes,
+      imageUrl,
       userId,
     } = req.body;
 
@@ -51,6 +52,7 @@ export default async function handleBoarding(req, res) {
       chipNumber,
       vaccines,
       petNotes,
+      imageUrl,
       userId,
     });
     res.json(boardingDoc);

@@ -136,3 +136,11 @@ tr:nth-child(odd) {
   border-radius: 8px;
   text-align: center;
 }
+
+
+@media print {
+  .hide-print {
+    display: none;
+  }
+ 
+}

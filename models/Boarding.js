@@ -12,6 +12,7 @@ const BoardingSchema = new Schema(
     chipNumber: { type: String },
     vaccines: { type: String },
     petNotes: { type: String },
+    imageUrl: {type: String},
     userId: { type: String, ref: "UserBooking" },
   },
   {

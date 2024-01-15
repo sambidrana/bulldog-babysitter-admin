@@ -45,4 +45,10 @@ export default async function handleEnquiry(req, res) {
       res.status(500).json({ error: "Failed to fetch Enquiry details." });
     }
   }
+  if (method === "DELETE") {
+    if (req.query?.id) {
+      await Enquiry.deleteOne({ _id: req.query?.id });
+      res.json(true);
+    }
+  }
 }

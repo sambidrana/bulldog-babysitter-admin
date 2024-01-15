@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 
 const View = () => {
   const [memberInfo, setMemberInfo] = useState(null); // Change initial state to null
@@ -60,7 +61,15 @@ const View = () => {
                 Dog's Details
               </td>
             </tr>
-
+            <div className="p-4 max-w-[500px]">
+              <a target="_blank" href={memberInfo.imageUrl}>
+                <img
+                  src={memberInfo.imageUrl}
+                  alt={memberInfo.petName}
+                  className="border p-4 hover:scale-105 transition-transform shadow-lg"
+                />
+              </a>
+            </div>
             <tr className="customTR">
               <th className=" customTH">Pet Name</th>
               <td className=" customTD">{memberInfo.petName}</td>
