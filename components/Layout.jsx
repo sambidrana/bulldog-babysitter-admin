@@ -1,13 +1,32 @@
 import { useSession, signIn, signOut } from "next-auth/react";
+import Image from "next/image";
 import Nav from "./Nav";
-export default function Layout({children}) {
+export default function Layout({ children }) {
   const { data: session } = useSession();
 
   if (!session) {
     return (
       <>
-        <h1>"Not logged in"</h1>
-        <button onClick={() => signIn()}>LogIn</button>
+        <div className="min-h-screen bg-[#a9c274]">
+          <div className="flex flex-col justify-center items-center min-h-screen">
+            <div className="p-6">
+              <Image
+                className="p-8 rounded-full overflow-hidden border-x-8"
+                src={"/logo1.png"}
+                width={350}
+                height={350}
+                alt="The Bulldog Babysitter"
+                priority
+              />
+            </div>
+            <button
+              onClick={() => signIn()}
+              className="py-1 px-4 font-serif tracking-widest bg-white border border-black rounded-md hover:shadow-lg"
+            >
+              LogIn
+            </button>
+          </div>
+        </div>
       </>
     );
   }

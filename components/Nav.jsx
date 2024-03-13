@@ -1,6 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const Nav = () => {
   const { data: session } = useSession();
@@ -11,9 +12,13 @@ const Nav = () => {
   return (
     <>
       <aside className="flex flex-col m-3 mt-10 hide-print ">
-        <h1>LOGO</h1>
-        <p className="text-white mt-2">Hello, {session?.user?.name}</p>
-        <nav className="flex flex-col gap-3 p-8 mt-10">
+        <div className="flex items-center justify-center">
+          <div className="w-20 md:w-24 ">
+            <Image className="rounded-full" src="/logo1.png" width={200} height={200} alt="The Bulldog Babysitter"/>
+            <p className="text-white mt-2">Hello, {session?.user?.name}</p>
+          </div>
+        </div>
+        <nav className="flex flex-col gap-3 pl-6 pr-4 mt-6">
           <Link
             href="/"
             className={router.asPath === "/" ? activeLink : inactiveLink}

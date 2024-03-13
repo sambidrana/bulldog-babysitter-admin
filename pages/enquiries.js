@@ -11,7 +11,6 @@ const enquiries = () => {
   useEffect(() => {
     axios.get("/api/enquiry").then((res) => {
       setEnquiryList(res.data);
-      console.log(res.data);
     });
   }, []);
 

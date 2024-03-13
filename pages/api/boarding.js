@@ -70,4 +70,20 @@ export default async function handleBoarding(req, res) {
       res.status(500).json({ error: "Failed to fetch boarding details." });
     }
   }
+
+  if (method === "PATCH") {
+    try {
+      const { id, ...updateData } = req.body;
+
+      const updatedBoarding = await Boarding.findByIdAndUpdate(id, updateData, {
+        new: true,
+      });
+      if (!updatedBoarding) {
+        return res.status(404).json({ error: "Boarding not found." });
+      }
+      res.json(updatedBoarding);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update boarding details." });
+    }
+  }
 }

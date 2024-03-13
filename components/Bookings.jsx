@@ -91,7 +91,6 @@ const Bookings = () => {
       .then((res) => {
         const bookingData = res.data;
         setBookings(bookingData);
-        console.log(bookingData);
 
         // Fetch user information and create a mapping by userId
         axios
@@ -130,7 +129,6 @@ const Bookings = () => {
     setBookingsWithBoarding(updatedBookingsWithBoarding);
   }, [bookings, boarding]);
 
-  console.log(bookingsWithBoarding);
 
   const table = useReactTable({
     data: bookingsWithBoarding,

@@ -55,19 +55,19 @@ const members = () => {
   }, []);
   return (
     <Layout>
-      <div className="mt-10 pl-16 pr-24 ">
+      <div className="p-10 md:mt-10 md:pl-16 md:pr-24 ">
         <FilterBoarding
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
         />
-        <table className="w-full mt-10  shadow-lg text-center bg-[#dcdad7] ">
+        <table className="w-full text-sm md:text-lg mt-4 md:mt-10 shadow-lg text-center ">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="customTR">
+              <tr key={headerGroup.id} className="customTR ">
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="p-4 text-lg text-gray-600  bg-[#f3e9c6]"
+                    className="p-4 text-gray-600 font-serif bg-[#f4f2eb]  border border-gray-300 "
                   >
                     {header.column.columnDef.header}
                     {header.column.getCanSort() && (
@@ -128,9 +128,9 @@ const members = () => {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="customTR">
+              <tr key={row.id} className="customTR ">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="customTD border border-black">
+                  <td key={cell.id} className="customTD p-2">
                     <Link href={`/boarding/view/${row.original._id}`}>
                       {flexRender(
                         cell.column.columnDef.cell,

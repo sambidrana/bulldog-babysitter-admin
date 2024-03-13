@@ -11,6 +11,9 @@ const DateTimeSettings = () => {
   const [disabledDates, setDisabledDates] = useState([]);
   //Enable Date Section
   const [enableDate, setEnableDate] = useState("");
+  //Time Interval Section
+  const [timeIntervalStart, setTimeIntervalStart] = useState("");
+  const [timeIntervalEnd, setTimeIntervalEnd] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +24,7 @@ const DateTimeSettings = () => {
 
     fetchData();
   }, []);
-  console.log(settingsData);
+  // console.log(settingsData);
 
   const handleAddDate = () => {
     if (disableDateInput && !disabledDates.includes(disableDateInput)) {
@@ -82,11 +85,39 @@ const DateTimeSettings = () => {
     setEnableDate(""); // Clear the input field after submission
   };
 
+  const handleOpeningAndClosingTime = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/api/hours", {
+        OpeningTime: timeIntervalStart,
+        ClosingTime: timeIntervalEnd,
+      });
+      // Handle success (e.g., notify the user)
+      console.log("Settings saved:", response.data);
+    } catch (error) {
+      // Handle error (e.g., notify the user)
+      console.error("Error saving settings:", error);
+    }
+    setTimeIntervalStart("");
+    setTimeIntervalEnd("");
+  };
+
+  useEffect(() => {
+    const fetchTime = async () => {
+      try {
+        const response = await axios("/api/hours");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchTime();
+  }, []);
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        <div className="p-2">
-          <h1 className="text-xl font-serif font-bold p-2 mb-10 ">Settings</h1>
+      <h1 className="text-xl font-serif font-bold p-2 mb-10 ">Settings</h1>
+      <div className="pl-2 pr-2 grid grid-cols-1 md:grid-cols-2">
+        <div className="p-1">
           <form
             className="border max-w-xl md:text-lg p-10"
             onSubmit={handleSubmit}
@@ -141,9 +172,11 @@ const DateTimeSettings = () => {
             </div>
           </form>
           <div className="mt-4 p-2">
-            <h1 className="text-lg font-serif font-semibold mb-1">Disabled Dates</h1>
+            <h1 className="text-lg font-serif font-semibold mb-1">
+              Disabled Dates
+            </h1>
             {settingsData && settingsData.disabledDates && (
-              <ul class="list-disc pl-5">
+              <ul className="list-disc pl-5">
                 {settingsData.disabledDates.map((date, index) => (
                   <li className="text-lg" key={index}>
                     {new Date(date).toLocaleDateString()}
@@ -167,6 +200,42 @@ const DateTimeSettings = () => {
                 className="bg-green-100 p-2 mt-4 font-semibold"
                 value={enableDate}
                 onChange={(e) => setEnableDate(e.target.value)}
+              />
+            </div>
+            <div className="mt-4">
+              <button
+                type="submit"
+                className="px-2 py-1 bg-blue-400 text-white rounded-lg "
+              >
+                Confirm
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="p-2">
+          <h2>Select Opening and Closing Timings</h2>
+          <form
+            className="border max-w-xl md:text-lg p-10"
+            onSubmit={handleOpeningAndClosingTime}
+          >
+            <div className="grid grid-cols-1 ">
+              <label htmlFor="openingTime">Opening Time</label>
+              <input
+                type="time"
+                id="openingTime"
+                className="bg-green-100 p-2 mt-4 font-semibold"
+                value={timeIntervalStart}
+                onChange={(e) => setTimeIntervalStart(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-1 ">
+              <label htmlFor="closingTime">Closing Time</label>
+              <input
+                type="time"
+                id="closingTime"
+                className="bg-green-100 p-2 mt-4 font-semibold"
+                value={timeIntervalEnd}
+                onChange={(e) => setTimeIntervalEnd(e.target.value)}
               />
             </div>
             <div className="mt-4">

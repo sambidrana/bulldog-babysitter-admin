@@ -29,16 +29,17 @@
 .customTH {
   color: rgb(89, 84, 84);
   border: 1px solid #e2e8f0;
-  font-size: large;
   letter-spacing: 0.5px;
-  padding: 5px;
+  font-style: italic;
+  padding-left: 5px;
+  font-size: 1rem;
 }
 
 .customTD {
   border: 1px solid white;
-  font-size: large;
   letter-spacing: 0.5px;
-  padding: 5px;
+  padding-left: 5px;
+  font-size: 1rem;
 }
 .customTR:hover {
   background-color: lightgray;
@@ -83,6 +84,19 @@ tr:nth-child(odd) {
   background-color: rgba(178, 173, 173, 0.551);
 }
 
+@media (min-width: 768px) {
+  .customTH {
+    padding-left: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .customTD {
+    padding-left: 10px;
+    font-size: 1.2rem;
+  }
+
+  /* Additional styles for larger screens can go here */
+}
 
 
 .resizer {
