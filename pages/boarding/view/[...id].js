@@ -2,20 +2,27 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 const View = () => {
   const [memberInfo, setMemberInfo] = useState(null); // Change initial state to null
   const [editMode, setEditMode] = useState(false);
   const [editedInfo, setEditedInfo] = useState({});
+
+  const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedBoardingId, setSelectedBoardingId] = useState(null);
+
   const router = useRouter();
   // console.log(router);
   const { id } = router.query;
   useEffect(() => {
     if (!id) return;
-    axios.get(`/api/boarding?id=${id}`).then((res) => {
-      //   console.log(res.data);
-      setMemberInfo(res.data);
-    });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding?id=${id}`)
+      .then((res) => {
+        //   console.log(res.data);
+        setMemberInfo(res.data);
+      });
   }, [id]);
 
   const handleInputChange = (e) => {
@@ -31,10 +38,13 @@ const View = () => {
   const handleSave = async () => {
     // Assuming your API expects an id in the body to identify the record
     try {
-      const res = await axios.patch(`/api/boarding?id=${id}`, {
-        ...editedInfo,
-        id: memberInfo._id,
-      });
+      const res = await axios.patch(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding?id=${id}`,
+        {
+          ...editedInfo,
+          id: memberInfo._id,
+        }
+      );
       setMemberInfo(res.data); // Update the local state to reflect the saved changes
       setEditMode(false); // Exit edit mode
     } catch (error) {
@@ -56,14 +66,63 @@ const View = () => {
   const handleGoBack = () => {
     router.back();
   };
+
+  // For Delete Action
+  const handleDelete = async () => {
+    // Open the confirmation dialog and set the selected booking ID
+
+    setSelectedBoardingId(id);
+    setConfirmDialogOpen(true);
+  };
+
+  const closeConfirmDialog = () => {
+    // Close the confirmation dialog
+    setConfirmDialogOpen(false);
+  };
+
+  const confirmAction = async () => {
+    // Close the confirmation dialog
+    setConfirmDialogOpen(false);
+
+    try {
+      // Perform the delete action using axios
+      const completeResponse = await axios.delete(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding?id=${selectedBoardingId}`
+      );
+
+      // Check the status code to determine success or failure
+      if (completeResponse.status === 200) {
+        console.log("Boarding deleted:", selectedBoardingId);
+        router.push("/boarding");
+      } else {
+        console.error(
+          "Failed to delete boarding details:",
+          completeResponse.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting boarding details: ", error.message);
+      // Handle error and update UI accordingly
+    }
+  };
+
   return (
     <Layout>
       <div className="mt-10 ml-10 ">
         <table className="w-full mt-6 text-left rounded shadow-sm ">
           <tbody>
             <tr>
-              <td colSpan="100%" className="pt-5 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]">
+              <td
+                colSpan="100%"
+                className="pt-5 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
+              >
                 Owner's Information
+                <button
+                  onClick={() => handleDelete()}
+                  className="text-xs mt-3 font-sans md:text-sm md:ml-3  px-3 py-2 bg-red-500 rounded-md text-white tracking-wide hover:bg-red-600"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
             <tr className="customTR">
@@ -125,7 +184,10 @@ const View = () => {
             </tr>
 
             <tr>
-              <td colSpan="100%" className="pt-10 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]">
+              <td
+                colSpan="100%"
+                className="pt-10 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
+              >
                 Dog's Details
               </td>
             </tr>
@@ -144,7 +206,7 @@ const View = () => {
             </tr>
             <tr className="customTR">
               <th className=" customTH">Pet Name</th>
-              <td  className=" customTD">
+              <td className=" customTD">
                 {editMode ? (
                   <input
                     type="text"
@@ -250,26 +312,32 @@ const View = () => {
         <div className="mt-7">
           <button
             onClick={handleGoBack}
-            className="mr-4  text-gray-400 border border-gray-400 rounded-md p-2 pl-4 pr-4 hover:border-white hover:bg-slate-400 hover:text-white"
+            className="text-xs mr-4  text-gray-400 border border-gray-400 tracking-wide rounded-md md:text-sm p-2 pl-4 pr-4 hover:border-white hover:bg-slate-400 hover:text-white"
           >
             Back
           </button>
           <button
             onClick={toggleEditMode}
-            className="ml-4 text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            className="text-xs ml-2 text-white bg-blue-500 hover:bg-blue-700 tracking-wide rounded-lg md:text-sm p-2 pl-5 pr-5 text-center"
           >
             {editMode ? "Cancel" : "Edit"}
           </button>
           {editMode && (
             <button
               onClick={handleSave}
-              className="ml-2 text-white bg-green-500 hover:bg-green-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              className="text-xs ml-2 text-white bg-green-500 hover:bg-green-700 tracking-wide rounded-lg md:text-sm p-2 pl-4 pr-4 text-center"
             >
               Save
             </button>
           )}
         </div>
       </div>
+      <ConfirmDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmAction}
+        confirmMessage="Are you sure to delete this users information?"
+      />{" "}
     </Layout>
   );
 };

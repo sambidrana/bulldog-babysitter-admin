@@ -3,7 +3,7 @@ import { mongooseConnect } from "@/lib/mongoose";
 import Cors from "cors";
 
 const cors = Cors({
-  origin: "http://localhost:3001", // specify the origin you want to allow
+  origin: process.env.NEXT_PUBLIC_CORS_ORIGIN, // specify the origin you want to allow
   methods: ["POST"], // specify the methods you want to allow
 });
 

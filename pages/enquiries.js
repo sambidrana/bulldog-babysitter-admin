@@ -9,7 +9,7 @@ const enquiries = () => {
   const [selectedEnquiryId, setSelectedEnquiryId] = useState(null);
 
   useEffect(() => {
-    axios.get("/api/enquiry").then((res) => {
+    axios.get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/enquiry`).then((res) => {
       setEnquiryList(res.data);
     });
   }, []);
@@ -33,7 +33,7 @@ const enquiries = () => {
     try {
       // Perform the delete action using axios
       const completeResponse = await axios.delete(
-        `/api/enquiry?id=${selectedEnquiryId}`
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/enquiry?id=${selectedEnquiryId}`
       );
 
       // Check the status code to determine success or failure
@@ -120,19 +120,3 @@ const enquiries = () => {
 };
 
 export default enquiries;
-
-/*
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AllowPublicReadObject",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3.GetObject",
-            "Resource": "arn:aws:s3:::bulldogbabysitter-upload/*",
- 
-        },
-        ],
-}
-*/

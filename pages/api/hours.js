@@ -3,7 +3,7 @@ import Cors from "cors";
 import { OpeningAndClosing } from "@/models/OpeningAndClosing";
 
 const cors = Cors({
-  origin: "http://localhost:3001", // specify the origin you want to allow
+  origin: process.env.NEXT_PUBLIC_CORS_ORIGIN, // specify the origin you want to allow
   methods: ["GET"], // specify the methods you want to allow
 });
 

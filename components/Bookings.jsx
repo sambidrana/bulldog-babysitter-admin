@@ -85,16 +85,18 @@ const Bookings = () => {
   ];
 
   useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_ADMIN_API_URL);
     // Fetch user bookings
     axios
-      .get("/api/userbookings")
+      .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings`)
+      // .get(`http://localhost:3000/api/userbookings`)
       .then((res) => {
         const bookingData = res.data;
         setBookings(bookingData);
 
         // Fetch user information and create a mapping by userId
         axios
-          .get("/api/boarding")
+          .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding`)
           .then((res) => {
             setBoarding(res.data);
             // console.log(boarding);
@@ -129,7 +131,6 @@ const Bookings = () => {
     setBookingsWithBoarding(updatedBookingsWithBoarding);
   }, [bookings, boarding]);
 
-
   const table = useReactTable({
     data: bookingsWithBoarding,
     columns,
@@ -162,7 +163,7 @@ const Bookings = () => {
     try {
       // Perform the delete action using axios
       const completeResponse = await axios.delete(
-        `/api/userbookings?id=${selectedBookingId}`
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings?id=${selectedBookingId}`
       );
 
       // Check the status code to determine success or failure
@@ -170,7 +171,9 @@ const Bookings = () => {
         console.log("Booking marked as complete:", selectedBookingId);
 
         // Fetch the updated bookings and update the state
-        const updatedBookings = await axios.get("/api/userbookings");
+        const updatedBookings = await axios.get(
+          `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings`
+        );
         setBookings(updatedBookings.data);
       } else {
         console.error(

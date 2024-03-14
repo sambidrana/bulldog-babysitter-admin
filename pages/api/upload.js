@@ -11,7 +11,7 @@ import formidable from "formidable";
 const bucketName = "bulldogbabysitter-uploads"; // Ensure this is your bucket name
 
 const cors = Cors({
-  origin: "http://localhost:3001",
+  origin: process.env.NEXT_PUBLIC_CORS_ORIGIN,
   methods: ["POST"],
 });
 

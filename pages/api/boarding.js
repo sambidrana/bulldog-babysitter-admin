@@ -3,7 +3,7 @@ import Cors from "cors";
 import { Boarding } from "@/models/Boarding";
 
 const cors = Cors({
-  origin: "http://localhost:3001", // specify the origin you want to allow
+  origin: process.env.NEXT_PUBLIC_CORS_ORIGIN, // specify the origin you want to allow
   methods: ["POST"], // specify the methods you want to allow
 });
 
@@ -84,6 +84,13 @@ export default async function handleBoarding(req, res) {
       res.json(updatedBoarding);
     } catch (error) {
       res.status(500).json({ error: "Failed to update boarding details." });
+    }
+  }
+
+  if (method === "DELETE") {
+    if (req.query?.id) {
+      await Boarding.deleteOne({ _id: req.query?.id });
+      res.json(true);
     }
   }
 }

@@ -17,7 +17,9 @@ const DateTimeSettings = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/settings");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/settings`
+      );
       const data = await response.json();
       setSettingsData(data); // Store the data as an array, not a string
     };
@@ -45,9 +47,12 @@ const DateTimeSettings = () => {
       const formattedDates = disabledDates.map((dateStr) =>
         new Date(dateStr).toISOString()
       );
-      const response = await axios.put("/api/settings", {
-        newDisabledDate: formattedDates, // Sending the entire array of dates
-      });
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/settings`,
+        {
+          newDisabledDate: formattedDates, // Sending the entire array of dates
+        }
+      );
       console.log(response.data);
 
       // Update the disabledDates state with the data from the response
@@ -70,9 +75,12 @@ const DateTimeSettings = () => {
     e.preventDefault();
     try {
       // Send DELETE request to backend with the date to be enabled
-      const response = await axios.delete("/api/settings", {
-        data: { dateToEnable: enableDate },
-      });
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/settings`,
+        {
+          data: { dateToEnable: enableDate },
+        }
+      );
       console.log(response.data);
 
       // Update local state to reflect the change
@@ -88,7 +96,7 @@ const DateTimeSettings = () => {
   const handleOpeningAndClosingTime = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/hours", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/hours`, {
         OpeningTime: timeIntervalStart,
         ClosingTime: timeIntervalEnd,
       });
@@ -105,7 +113,7 @@ const DateTimeSettings = () => {
   useEffect(() => {
     const fetchTime = async () => {
       try {
-        const response = await axios("/api/hours");
+        const response = await axios(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/hours`);
       } catch (err) {
         console.error(err);
       }

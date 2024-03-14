@@ -48,7 +48,7 @@ const members = () => {
   });
 
   useEffect(() => {
-    axios.get("/api/boarding").then((res) => {
+    axios.get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding`).then((res) => {
       // console.log(res.data);
       setBoardingData(res.data);
     });

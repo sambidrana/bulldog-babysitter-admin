@@ -40,6 +40,7 @@
   letter-spacing: 0.5px;
   padding-left: 5px;
   font-size: 1rem;
+  font-family: 'Times New Roman', Times, serif;
 }
 .customTR:hover {
   background-color: lightgray;

@@ -6,12 +6,12 @@ import Image from "next/image";
 const Nav = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  const inactiveLink = "flex gap-1 p-2 pr-4 pl-4 ";
-  const activeLink = `${inactiveLink} bg-gray-100 text-black  rounded-lg shadow-lg`;
+  const inactiveLink = "flex gap-1 p-2 pr-4 pl-4 hover:scale-110 hover:text-white ";
+  const activeLink = `${inactiveLink} bg-gray-100 text-black rounded-lg shadow-lg`;
 
   return (
     <>
-      <aside className="flex flex-col m-3 mt-10 hide-print ">
+      <aside className="flex flex-col m-3 mt-10 hide-print font-serif  ">
         <div className="flex items-center justify-center">
           <div className="w-20 md:w-24 ">
             <Image className="rounded-full" src="/logo1.png" width={200} height={200} alt="The Bulldog Babysitter"/>
