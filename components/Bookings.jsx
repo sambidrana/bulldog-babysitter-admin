@@ -85,7 +85,6 @@ const Bookings = () => {
   ];
 
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_ADMIN_API_URL);
     // Fetch user bookings
     axios
       .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings`)
@@ -168,7 +167,7 @@ const Bookings = () => {
 
       // Check the status code to determine success or failure
       if (completeResponse.status === 200) {
-        console.log("Booking marked as complete:", selectedBookingId);
+        // console.log("Booking marked as complete:", selectedBookingId);
 
         // Fetch the updated bookings and update the state
         const updatedBookings = await axios.get(

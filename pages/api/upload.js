@@ -38,7 +38,7 @@ export default async function handleUpload(req, res) {
         resolve({ fields, files });
       });
     });
-    console.log("FILE INFO", files);
+    // console.log("FILE INFO", files);
     // Initialize S3 Client with new v3 syntax
     const client = new S3Client({
       region: "ap-southeast-2",

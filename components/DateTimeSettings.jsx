@@ -33,7 +33,7 @@ const DateTimeSettings = () => {
       setDisabledDates([...disabledDates, disableDateInput]);
       setSelectedDates([...disabledDates, disableDateInput]);
     }
-    console.log(disabledDates);
+    // console.log(disabledDates);
   };
 
   const handleRemoveDate = (dateToRemove) => {
@@ -53,7 +53,7 @@ const DateTimeSettings = () => {
           newDisabledDate: formattedDates, // Sending the entire array of dates
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
 
       // Update the disabledDates state with the data from the response
       if (response.data && response.data.disabledDates) {
@@ -81,7 +81,7 @@ const DateTimeSettings = () => {
           data: { dateToEnable: enableDate },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
 
       // Update local state to reflect the change
       setDisabledDates((currentDates) =>
@@ -100,8 +100,7 @@ const DateTimeSettings = () => {
         OpeningTime: timeIntervalStart,
         ClosingTime: timeIntervalEnd,
       });
-      // Handle success (e.g., notify the user)
-      console.log("Settings saved:", response.data);
+      // console.log("Settings saved:", response.data);
     } catch (error) {
       // Handle error (e.g., notify the user)
       console.error("Error saving settings:", error);

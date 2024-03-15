@@ -92,7 +92,7 @@ const View = () => {
 
       // Check the status code to determine success or failure
       if (completeResponse.status === 200) {
-        console.log("Boarding deleted:", selectedBoardingId);
+        // console.log("Boarding deleted:", selectedBoardingId);
         router.push("/boarding");
       } else {
         console.error(

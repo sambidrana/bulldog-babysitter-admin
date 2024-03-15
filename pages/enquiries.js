@@ -38,7 +38,7 @@ const enquiries = () => {
 
       // Check the status code to determine success or failure
       if (completeResponse.status === 200) {
-        console.log("Enquiry deleted:", selectedEnquiryId);
+        // console.log("Enquiry deleted:", selectedEnquiryId);
 
         // Update the state by filtering out the deleted enquiry
         setEnquiryList(
