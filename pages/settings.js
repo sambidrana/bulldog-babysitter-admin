@@ -2,7 +2,7 @@ import DateTimeSettings from "@/components/DateTimeSettings";
 import Layout from "@/components/Layout";
 import React from "react";
 
-const settings = () => {
+const Settings = () => {
   return (
     <>
       <Layout>
@@ -14,4 +14,4 @@ const settings = () => {
   );
 };
 
-export default settings;
+export default Settings;

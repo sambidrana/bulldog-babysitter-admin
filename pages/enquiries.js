@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
-const enquiries = () => {
+const Enquiries = () => {
   const [enquiryList, setEnquiryList] = useState([]);
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedEnquiryId, setSelectedEnquiryId] = useState(null);
@@ -119,4 +119,4 @@ const enquiries = () => {
   );
 };
 
-export default enquiries;
+export default Enquiries;

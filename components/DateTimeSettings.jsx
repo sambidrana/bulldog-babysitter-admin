@@ -131,7 +131,7 @@ const DateTimeSettings = () => {
           >
             <div className="">
               <label htmlFor="disableDateInput" className="">
-                Select the dates you don't want a booking to take place:
+                Select the dates you don&apos;t want a booking to take place:
               </label>
               <div>
                 <input

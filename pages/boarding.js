@@ -10,7 +10,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Filters from "@/components/Filters";
 import FilterBoarding from "@/components/FilterBoarding";
 
 const columns = [
@@ -31,7 +30,7 @@ const columns = [
   },
 ];
 
-const members = () => {
+const Members = () => {
   const [boardingData, setBoardingData] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
 
@@ -148,4 +147,4 @@ const members = () => {
   );
 };
 
-export default members;
+export default Members;

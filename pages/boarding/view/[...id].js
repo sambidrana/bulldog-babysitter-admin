@@ -116,7 +116,7 @@ const View = () => {
                 colSpan="100%"
                 className="pt-5 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
               >
-                Owner's Information
+                Owner&apos;s Information
                 <button
                   onClick={() => handleDelete()}
                   className="text-xs mt-3 font-sans md:text-sm md:ml-3  px-3 py-2 bg-red-500 rounded-md text-white tracking-wide hover:bg-red-600"
@@ -188,7 +188,7 @@ const View = () => {
                 colSpan="100%"
                 className="pt-10 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
               >
-                Dog's Details
+                Dog&apos;s Details
               </td>
             </tr>
             <tr>
