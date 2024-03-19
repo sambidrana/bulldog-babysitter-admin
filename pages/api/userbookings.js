@@ -4,7 +4,7 @@ import Cors from "cors";
 
 const cors = Cors({
   origin: process.env.NEXT_PUBLIC_CORS_ORIGIN, // specify the origin you want to allow
-  methods: ["POST"], // specify the methods you want to allow
+  methods: ["GET", "POST", "DELETE"], // specify the methods you want to allow
 });
 
 function runMiddleware(req, res, fn) {
