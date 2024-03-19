@@ -51,7 +51,8 @@ export default async function handleUpload(req, res) {
     const file = files.file;
     const originalFilename = file.originalFilename;
     const fileExtension = originalFilename.split(".").pop();
-    const newFilename = Date.now() + '-' + file.newFilename + "." + fileExtension; // Append the extension to the new file name
+    const newFilename =
+      Date.now() + "-" + file.newFilename + "." + fileExtension; // Append the extension to the new file name
 
     console.log(newFilename);
     await client.send(
