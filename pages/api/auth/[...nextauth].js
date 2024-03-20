@@ -2,7 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-// import EmailProvider from 'next-auth/providers/email'
+import { signIn } from "next-auth/react";
 
 export default NextAuth({
   providers: [
@@ -12,12 +12,16 @@ export default NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
-    // // Passwordless / email sign in
-    // EmailProvider({
-    //   server: process.env.MAIL_SERVER,
-    //   from: 'NextAuth.js <no-reply@example.com>'
-    // }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   adapter: MongoDBAdapter(clientPromise),
+  callbacks: {
+    async signIn({ user }) {
+      const allowedUsers = [process.env.ADMIN_EMAIL, process.env.ALLOWED_EMAIL];
+      if (allowedUsers.includes(user.email)) {
+        return true;
+      }
+      return false;
+    },
+  },
 });
