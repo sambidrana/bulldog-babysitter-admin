@@ -189,7 +189,7 @@ const Bookings = () => {
   return (
     <>
       <Layout className="">
-        <div className="mt-8 pl-10 pr-10 ">
+        <div className="mt-8 pl-2 pr-2 md:pl-10 md:pr-10 ">
           <Filters
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
@@ -197,11 +197,11 @@ const Bookings = () => {
           />
           <button
             onClick={() => window.print()}
-            className="p-2 text-lg border rounded-md hover:bg-gray-100 hide-print"
+            className="p-2 mb-2 text-sm md:text-lg border rounded-md hover:bg-green-500 hover:text-white hide-print"
           >
             Print Table
           </button>
-          <div className="table " style={{ width: `${table.getTotalSize()}px` }}>
+          <div className="table text-sm md:text-base" style={{ width: `${table.getTotalSize()}px` }}>
             {table.getHeaderGroups().map((headerGroup) => (
               <div className="tr" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -220,7 +220,7 @@ const Bookings = () => {
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
-                          className="w-6 h-6"
+                          className="w-4 h-4 md:w-6 md:h-6"
                         >
                           <path
                             fillRule="evenodd"
@@ -288,14 +288,14 @@ const Bookings = () => {
             ))}
           </div>
           <div>
-            <p className="mt-6">
+            <p className="mt-6 text-sm md:text-base">
               Page {table.getState().pagination.pageIndex + 1} of{" "}
               {table.getPageCount()}
             </p>
           </div>
           <div>
             <button
-              className={`p-2 pr-4 pl-4 text-lg border rounded-md hover:bg-gray-100 hover:text-white ${
+              className={`p-2 pr-4 pl-4 text-sm md:text-lg border rounded-md hover:bg-gray-100 hover:text-white ${
                 table.getCanPreviousPage() ? "" : "cursor-not-allowed"
               }`}
               onClick={() => table.previousPage()}
@@ -304,7 +304,7 @@ const Bookings = () => {
               {"<"}
             </button>
             <button
-              className={`p-2 pr-4 pl-4 text-lg border rounded-md hover:bg-gray-100 hover:text-white ${
+              className={`p-2 pr-4 pl-4 text-sm md:text-lg border rounded-md hover:bg-gray-100 hover:text-white ${
                 table.getCanNextPage() ? "" : "cursor-not-allowed"
               }`}
               onClick={() => table.nextPage()}

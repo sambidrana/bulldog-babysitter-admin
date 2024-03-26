@@ -59,19 +59,19 @@ const Members = () => {
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
         />
-        <table className="w-full text-sm md:text-lg mt-4 md:mt-10 shadow-lg text-center ">
+        <table className="w-full mt-4 md:mt-10 shadow-lg text-center ">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="customTR ">
+              <tr key={headerGroup.id} className="customTR">
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="text-xs md:text-lg p-2 md:p-4 text-gray-600 font-serif bg-[#f4f2eb]  border border-gray-300 "
+                    className="text-sm md:text-base pl-2 pr-2 md:p-4 text-gray-600 font-serif bg-[#f4f2eb]  border border-gray-300 "
                   >
                     {header.column.columnDef.header}
                     {header.column.getCanSort() && (
                       <button
-                        className=" ml-2 pl-2"
+                        className="ml-2 pl-2"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         <svg
@@ -127,9 +127,9 @@ const Members = () => {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="customTR">
+              <tr key={row.id} className="customTR ">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="customTD pb-2 pt-2">
+                  <td key={cell.id} className="customTD p-2 ">
                     <Link href={`/boarding/view/${row.original._id}`}>
                       {flexRender(
                         cell.column.columnDef.cell,

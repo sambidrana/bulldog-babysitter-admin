@@ -58,7 +58,7 @@ const Enquiries = () => {
     <>
       <Layout>
         <div className=" mx-auto overflow-x-auto">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 font-bold p-4 bg-gray-200 rounded-t-lg">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 font-bold p-4 bg-gray-200 rounded-t-lg  tracking-wide">
             <div className="hidden md:block">Name</div>
             <div className="hidden md:block">Phone</div>
             <div className="hidden md:block">Email</div>
@@ -69,7 +69,7 @@ const Enquiries = () => {
             enquiryList.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-6 gap-4 p-2 border-b"
+                className="grid grid-cols-1 md:grid-cols-6 gap-4 p-2 border-b text-sm md:text-base"
               >
                 <div className="text-gray-600 font-serif tracking-wide p-2">
                   {item.name}

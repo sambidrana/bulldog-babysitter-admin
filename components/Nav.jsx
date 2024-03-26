@@ -15,7 +15,7 @@ const Nav = () => {
         <div className="flex items-center justify-center">
           <div className="w-10 md:w-24 ">
             <Image className="rounded-full" src="/logo1.png" width={200} height={200} alt="The Bulldog Babysitter"/>
-            <p className="text-white mt-2 text-sm md:text-lg">Hello, {session?.user?.name}</p>
+            <p className="text-white mt-1 md:mt-2 text-xs md:text-lg">Hello, {session?.user?.name}</p>
           </div>
         </div>
         <nav className="flex flex-col gap-3 pl-1 pr-1 md:pl-6 md:pr-4 mt-6">

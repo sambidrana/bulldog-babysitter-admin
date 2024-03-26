@@ -35,21 +35,21 @@ const FilterBoarding = ({ columnFilters, setColumnFilters }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:mb-4">
+    <div className="flex flex-col md:flex-row md:mb-4 items-center text-sm md:text-lg">
       <input
-        className="p-2 border border-gray-600 rounded-lg mb-2 md:mr-2"
+        className="px-1 py-1 md:px-2 md:py-2 border border-gray-600 rounded-lg mb-2 md:mr-2"
         placeholder="Search First Name"
         value={firstNameFilter.value}
         onChange={(e) => onFilterChange("firstName", e.target.value)}
       />
       <input
-        className="p-2 border border-gray-600 rounded-lg mb-2 md:mr-2"
+        className="px-1 py-1 md:px-2 md:py-2 border border-gray-600 rounded-lg mb-2 md:mr-2"
         placeholder="Search Last Name"
         value={lastNameFilter.value}
         onChange={(e) => onFilterChange("lastName", e.target.value)}
       />
       <input
-        className="p-2 border border-gray-600 rounded-lg mb-2 md:mr-2"
+        className="px-1 py-1 md:px-2 md:py-2 border border-gray-600 rounded-lg mb-2 md:mr-2"
         placeholder="Search Pet Name"
         value={petNameFilter.value}
         onChange={(e) => onFilterChange("petName", e.target.value)}

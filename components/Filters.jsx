@@ -40,7 +40,7 @@ const Filters = ({ columnFilters, setColumnFilters }) => {
   };
 
   return (
-    <div className="mb-4 hide-print">
+    <div className="mb-4 hide-print text-sm md:text-base">
       <input
         className="p-2 border border-gray-600 rounded-lg mr-2"
         placeholder="Search First Name"

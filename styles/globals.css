@@ -63,8 +63,6 @@ tr:nth-child(odd) {
 
 .th,
 .td {
-  /* box-shadow: inset 0 0 0 1px #b3aeae; */
-  /* border: 1px solid black; */
   border-bottom: 1px solid gray;
   border-right: 0.5px solid gray;
   padding: 10px;
