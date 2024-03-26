@@ -96,10 +96,13 @@ const DateTimeSettings = () => {
   const handleOpeningAndClosingTime = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/hours`, {
-        OpeningTime: timeIntervalStart,
-        ClosingTime: timeIntervalEnd,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/hours`,
+        {
+          OpeningTime: timeIntervalStart,
+          ClosingTime: timeIntervalEnd,
+        }
+      );
       // console.log("Settings saved:", response.data);
     } catch (error) {
       // Handle error (e.g., notify the user)
@@ -112,7 +115,9 @@ const DateTimeSettings = () => {
   useEffect(() => {
     const fetchTime = async () => {
       try {
-        const response = await axios(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/hours`);
+        const response = await axios(
+          `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/hours`
+        );
       } catch (err) {
         console.error(err);
       }
@@ -122,138 +127,146 @@ const DateTimeSettings = () => {
   }, []);
   return (
     <>
-      <h1 className="text-xl font-serif font-bold p-2 mb-10 ">Settings</h1>
-      <div className="pl-2 pr-2 grid grid-cols-1 md:grid-cols-2">
-        <div className="p-1">
-          <form
-            className="border max-w-xl md:text-lg p-10"
-            onSubmit={handleSubmit}
-          >
-            <div className="">
-              <label htmlFor="disableDateInput" className="">
-                Select the dates you don&apos;t want a booking to take place:
-              </label>
-              <div>
-                <input
-                  type="date"
-                  id="disableDateInput"
-                  className="bg-red-200  p-2 font-semibold "
-                  value={disableDateInput}
-                  onChange={(e) => setDisableDateInput(e.target.value)}
-                />
-                <button
-                  className="px-2 py-1 rounded-lg mt-10 bg-green-500 ml-4 text-white"
-                  type="button"
-                  onClick={handleAddDate}
-                >
-                  Add Date
-                </button>
+      <div className="text-gray-80000">
+        <h1 className="text-sm md:text-xl text-center md:text-start font-serif font-bold p-2 mb-4 md:mb-10 ">
+          Settings
+        </h1>
+        <div className="grid grid-cols-1 place-items-center ">
+          <div>
+            <div className="p-1 md:w-[700px]">
+              <form
+                className="border text-sm md:text-lg p-5 md:p-10"
+                onSubmit={handleSubmit}
+              >
+                <div className="">
+                  <label htmlFor="disableDateInput" className="">
+                    Select the dates you don&apos;t want a booking to take
+                    place:
+                  </label>
+                  <div className="flex flex-col items-center mt-5">
+                    <input
+                      type="date"
+                      id="disableDateInput"
+                      className="bg-red-200 p-2 font-semibold "
+                      value={disableDateInput}
+                      onChange={(e) => setDisableDateInput(e.target.value)}
+                    />
+                    <button
+                      className="px-2 py-1 rounded-lg mt-5 bg-green-500 text-white "
+                      type="button"
+                      onClick={handleAddDate}
+                    >
+                      Add Date
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-2 mt-4">
+                  <h3 className="font-serif font-bold">Selected Dates:</h3>
+                  <ul className="">
+                    {selectedDates.map((date, index) => (
+                      <li
+                        className="grid grid-cols-2 gap-1 p-2 place-items-center border-b-2 "
+                        key={index}
+                      >
+                        {date}
+                        <button
+                          className="px-2 py-1 bg-red-600 text-white rounded-md ml-2"
+                          onClick={() => handleRemoveDate(date)}
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex items-center justify-center mt-4">
+                  <button
+                    type="submit"
+                    className="px-2 py-1 bg-blue-400 text-white rounded-lg "
+                  >
+                    Confirm Dates
+                  </button>
+                </div>
+              </form>
+              <div className="mt-4 p-2 text-sm md:text-lg">
+                <h1 className="font-serif text-red-600 font-semibold mb-1">
+                  Disabled Dates
+                </h1>
+                {settingsData && settingsData.disabledDates && (
+                  <ul className="list-disc ml-5">
+                    {settingsData.disabledDates.map((date, index) => (
+                      <li className="" key={index}>
+                        {new Date(date).toLocaleDateString()}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
-
-            <div className="p-2 mt-4">
-              <h3 className="md:text-lg font-serif font-bold">
-                Selected Dates:
-              </h3>
-              <ul className="p-2">
-                {selectedDates.map((date, index) => (
-                  <li className="p-2 border-b-2 w-fit" key={index}>
-                    {date}
-                    <button
-                      className="px-2 py-1 bg-red-600 text-white rounded-md ml-4"
-                      onClick={() => handleRemoveDate(date)}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex items-center justify-center p-4">
-              <button
-                type="submit"
-                className="px-2 py-1 bg-blue-400 text-white rounded-lg "
-              >
-                Confirm Dates
-              </button>
-            </div>
-          </form>
-          <div className="mt-4 p-2">
-            <h1 className="text-lg font-serif font-semibold mb-1">
-              Disabled Dates
-            </h1>
-            {settingsData && settingsData.disabledDates && (
-              <ul className="list-disc pl-5">
-                {settingsData.disabledDates.map((date, index) => (
-                  <li className="text-lg" key={index}>
-                    {new Date(date).toLocaleDateString()}
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
-        </div>
+          <div className="p-2 mt-5 md:w-[700px]">
+            <form
+              className="border text-sm md:text-lg p-5 md:p-10"
+              onSubmit={handleEnableDate}
+            >
+              <div className="flex flex-col items-center mt-5">
+                <label htmlFor="enableDate"><span className="text-green-500 font-semibold" >Enable</span> Booking Date</label>
+                <input
+                  type="date"
+                  id="enableDate"
+                  className="bg-green-100 p-2 mt-4 font-semibold"
+                  value={enableDate}
+                  onChange={(e) => setEnableDate(e.target.value)}
+                />
+                <div className="mt-4">
+                  <button
+                    type="submit"
+                    className="px-2 py-1 bg-blue-400 text-white rounded-lg "
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
 
-        <div className="p-2 mt-20 ">
-          <form
-            className="border max-w-xl md:text-lg p-10"
-            onSubmit={handleEnableDate}
-          >
-            <div className="grid grid-cols-1 ">
-              <label htmlFor="enableDate">Enable Booking Date</label>
-              <input
-                type="date"
-                id="enableDate"
-                className="bg-green-100 p-2 mt-4 font-semibold"
-                value={enableDate}
-                onChange={(e) => setEnableDate(e.target.value)}
-              />
-            </div>
-            <div className="mt-4">
-              <button
-                type="submit"
-                className="px-2 py-1 bg-blue-400 text-white rounded-lg "
+          <div className="p-2 md:w-[700px]">
+            <form
+              className="border text-sm md:text-lg p-5 md:p-10"
+              onSubmit={handleOpeningAndClosingTime}
               >
-                Confirm
-              </button>
-            </div>
-          </form>
-        </div>
-        <div className="p-2">
-          <h2>Select Opening and Closing Timings</h2>
-          <form
-            className="border max-w-xl md:text-lg p-10"
-            onSubmit={handleOpeningAndClosingTime}
-          >
-            <div className="grid grid-cols-1 ">
-              <label htmlFor="openingTime">Opening Time</label>
-              <input
-                type="time"
-                id="openingTime"
-                className="bg-green-100 p-2 mt-4 font-semibold"
-                value={timeIntervalStart}
-                onChange={(e) => setTimeIntervalStart(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-1 ">
-              <label htmlFor="closingTime">Closing Time</label>
-              <input
-                type="time"
-                id="closingTime"
-                className="bg-green-100 p-2 mt-4 font-semibold"
-                value={timeIntervalEnd}
-                onChange={(e) => setTimeIntervalEnd(e.target.value)}
-              />
-            </div>
-            <div className="mt-4">
-              <button
-                type="submit"
-                className="px-2 py-1 bg-blue-400 text-white rounded-lg "
-              >
-                Confirm
-              </button>
-            </div>
-          </form>
+              <label className="font-bold">Select </label>
+              <div className="flex flex-col items-center mt-5">
+                <label className="text-green-500" htmlFor="openingTime">Opening Time</label>
+                <input
+                  type="time"
+                  id="openingTime"
+                  className="bg-green-100 p-2 mt-4 font-semibold"
+                  value={timeIntervalStart}
+                  onChange={(e) => setTimeIntervalStart(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col items-center mt-5">
+                <label className="text-red-500" htmlFor="closingTime">Closing Time</label>
+                <input
+                  type="time"
+                  id="closingTime"
+                  className="bg-red-100 p-2 mt-4 font-semibold"
+                  value={timeIntervalEnd}
+                  onChange={(e) => setTimeIntervalEnd(e.target.value)}
+                />
+              </div>
+              <div className="flex justify-center items-center mt-5">
+                <button
+                  type="submit"
+                  className="px-2 py-1 bg-blue-400 text-white rounded-lg "
+                >
+                  Confirm
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </>

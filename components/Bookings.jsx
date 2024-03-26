@@ -189,7 +189,7 @@ const Bookings = () => {
   return (
     <>
       <Layout className="">
-        <div className="mt-8 pl-10 pr-10">
+        <div className="mt-8 pl-10 pr-10 ">
           <Filters
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
@@ -201,7 +201,7 @@ const Bookings = () => {
           >
             Print Table
           </button>
-          <div className="table" style={{ width: `${table.getTotalSize()}px` }}>
+          <div className="table " style={{ width: `${table.getTotalSize()}px` }}>
             {table.getHeaderGroups().map((headerGroup) => (
               <div className="tr" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

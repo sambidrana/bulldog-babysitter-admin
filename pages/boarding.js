@@ -54,7 +54,7 @@ const Members = () => {
   }, []);
   return (
     <Layout>
-      <div className="p-10 md:mt-10 md:pl-16 md:pr-24 ">
+      <div className=" md:p-10 md:mt-10 md:pl-16 md:pr-24 ">
         <FilterBoarding
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
@@ -66,19 +66,19 @@ const Members = () => {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="p-4 text-gray-600 font-serif bg-[#f4f2eb]  border border-gray-300 "
+                    className="text-xs md:text-lg p-2 md:p-4 text-gray-600 font-serif bg-[#f4f2eb]  border border-gray-300 "
                   >
                     {header.column.columnDef.header}
                     {header.column.getCanSort() && (
                       <button
-                        className="ml-2 pl-2"
+                        className=" ml-2 pl-2"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
-                          className="w-6 h-6 justify-items-center"
+                          className="w-4 h-4 md:w-6 md:h-6 justify-items-center"
                         >
                           <path
                             fillRule="evenodd"
@@ -95,7 +95,7 @@ const Members = () => {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
                             fill="currentColor"
-                            className="w-5 h-5 inline-block"
+                            className="w-4 h-4 md:w-6 md:h-6 inline-block"
                           >
                             <path
                               fillRule="evenodd"
@@ -109,7 +109,7 @@ const Members = () => {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
                             fill="currentColor"
-                            className="w-5 h-5 inline-block"
+                            className="w-4 h-4 md:w-6 md:h-6 inline-block"
                           >
                             <path
                               fillRule="evenodd"
@@ -127,9 +127,9 @@ const Members = () => {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="customTR ">
+              <tr key={row.id} className="customTR">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="customTD p-2">
+                  <td key={cell.id} className="customTD pb-2 pt-2">
                     <Link href={`/boarding/view/${row.original._id}`}>
                       {flexRender(
                         cell.column.columnDef.cell,
