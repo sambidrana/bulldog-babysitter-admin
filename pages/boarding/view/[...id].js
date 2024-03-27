@@ -108,18 +108,18 @@ const View = () => {
 
   return (
     <Layout>
-      <div className="mt-10 ml-10 ">
-        <table className="w-full mt-6 text-left rounded shadow-sm ">
+      <div className="md:mt-1 md:ml-1 ">
+        <table className="w-full text-left rounded shadow-sm ">
           <tbody>
             <tr>
               <td
                 colSpan="100%"
-                className="pt-5 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
+                className="pt-2 md:pt-5 pb-2 md:pb-4 pl-2 md:pl-5 text-sm md:text-2xl font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
               >
                 Owner&apos;s Information
                 <button
                   onClick={() => handleDelete()}
-                  className="text-xs mt-3 font-sans md:text-sm md:ml-3  px-3 py-2 bg-red-500 rounded-md text-white tracking-wide hover:bg-red-600"
+                  className="text-xs mt-3 font-sans ml-2 md:ml-3 px-3 py-2 bg-red-500 rounded-md text-white tracking-wide hover:bg-red-600"
                 >
                   Delete
                 </button>
@@ -186,7 +186,7 @@ const View = () => {
             <tr>
               <td
                 colSpan="100%"
-                className="pt-10 md:text-2xl pb-4 pl-5 font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
+                className="pt-5 pb-2 md:pb-4 pl-2 md:pl-5 text-sm md:text-2xl font-semibold text-gray-500 font-serif bg-[#f4f2eb]"
               >
                 Dog&apos;s Details
               </td>
