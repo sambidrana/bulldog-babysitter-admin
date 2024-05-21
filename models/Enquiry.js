@@ -6,6 +6,7 @@ const EnquirySchema = new Schema(
     email: { type: String, required: true },
     contact: { type: String },
     message: { type: String, required: true },
+    completed: {type: Boolean},
   },
   {
     timestamps: true,

@@ -28,6 +28,11 @@ const columns = [
     header: "Pet Name",
     cell: (props) => <p>{props.getValue()}</p>,
   },
+  {
+    accessorKey: "bookingCount",
+    header: "Booking Count",
+    cell: (props) => <p>{props.getValue()}</p>,
+  },
 ];
 
 const Members = () => {

@@ -1,11 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
 
 const DateTimeSettings = () => {
-  const router = useRouter();
-
   //Get Existing Disabled Dates
   const [settingsData, setSettingsData] = useState({});
   //Disable Dates Section
@@ -31,15 +28,16 @@ const DateTimeSettings = () => {
       fetchData();
     }, []);
     */
-
+    
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios
-        .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/settings`)
-        .then((res) => {
-          // console.log(res.data[0].disabledDates);
-          setSettingsData(res.data[0]);
-        });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/settings`
+      ).then((res) => {
+        console.log(res.data.disabledDates)
+        setSettingsData(res.data.disabledDates)
+      })
+      // const data = await response.json();
       // setSettingsData(data); // Store the data as an array, not a string
     };
 
@@ -84,7 +82,6 @@ const DateTimeSettings = () => {
 
       setDisableDateInput(""); // Clear the input field after submission
       setSelectedDates([]); // Clear the input field after submission
-      router.refresh();
     } catch (error) {
       console.error("Error submitting date:", error);
     }
@@ -110,7 +107,6 @@ const DateTimeSettings = () => {
       console.error("Error enabling date:", error);
     }
     setEnableDate(""); // Clear the input field after submission
-    router.refresh()
   };
 
   const handleOpeningAndClosingTime = async (e) => {
@@ -130,8 +126,6 @@ const DateTimeSettings = () => {
     }
     setTimeIntervalStart("");
     setTimeIntervalEnd("");
-    router.refresh()
-
   };
 
   useEffect(() => {
@@ -161,7 +155,7 @@ const DateTimeSettings = () => {
                 onSubmit={handleSubmit}
               >
                 <div className="">
-                  <label htmlFor="disableDateInput" className="text-gray-700">
+                  <label htmlFor="disableDateInput" className="">
                     Select the dates you don&apos;t want a booking to take
                     place:
                   </label>
@@ -174,7 +168,7 @@ const DateTimeSettings = () => {
                       onChange={(e) => setDisableDateInput(e.target.value)}
                     />
                     <button
-                      className="px-2 py-1 rounded-lg mt-5 bg-green-500 text-white hover:bg-green-600"
+                      className="px-2 py-1 rounded-lg mt-5 bg-green-500 text-white "
                       type="button"
                       onClick={handleAddDate}
                     >
@@ -193,7 +187,7 @@ const DateTimeSettings = () => {
                       >
                         {date}
                         <button
-                          className="px-2 py-1 bg-red-600 text-white rounded-md ml-2 hover:bg-red-700"
+                          className="px-2 py-1 bg-red-600 text-white rounded-md ml-2"
                           onClick={() => handleRemoveDate(date)}
                         >
                           Remove
@@ -205,27 +199,23 @@ const DateTimeSettings = () => {
                 <div className="flex items-center justify-center mt-4">
                   <button
                     type="submit"
-                    className="px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="px-2 py-1 bg-blue-400 text-white rounded-lg "
                   >
                     Confirm Dates
                   </button>
                 </div>
               </form>
-
-              <div className="mt-4 p-2 text-sm md:text-lg ">
+              <div className="mt-4 p-2 text-sm md:text-lg">
                 <h1 className="font-serif text-red-600 font-semibold mb-1">
                   Disabled Dates
                 </h1>
                 {settingsData && settingsData.disabledDates && (
-                  <ul className="list-disc ml-5 flex flex-wrap gap-6">
-                    {settingsData.disabledDates
-                      .map((date) => new Date(date)) // Parse ISO strings into Date objects
-                      .sort((a, b) => a - b) // Sort the Date objects
-                      .map((date, index) => (
-                        <li className="text-gray-600" key={index}>
-                          {date.toLocaleDateString()}
-                        </li>
-                      ))}
+                  <ul className="list-disc ml-5">
+                    {settingsData.disabledDates.map((date, index) => (
+                      <li className="" key={index}>
+                        {new Date(date).toLocaleDateString()}
+                      </li>
+                    ))}
                   </ul>
                 )}
               </div>
@@ -237,12 +227,7 @@ const DateTimeSettings = () => {
               onSubmit={handleEnableDate}
             >
               <div className="flex flex-col items-center mt-5">
-                <label htmlFor="enableDate">
-                  <p className="text-gray-700">
-                    <span className="text-green-500 font-semibold">Enable </span>
-                    Booking Date
-                  </p>
-                </label>
+                <label htmlFor="enableDate"><span className="text-green-500 font-semibold" >Enable</span> Booking Date</label>
                 <input
                   type="date"
                   id="enableDate"
@@ -253,7 +238,7 @@ const DateTimeSettings = () => {
                 <div className="mt-4">
                   <button
                     type="submit"
-                    className="px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="px-2 py-1 bg-blue-400 text-white rounded-lg "
                   >
                     Confirm
                   </button>
@@ -266,12 +251,10 @@ const DateTimeSettings = () => {
             <form
               className="border text-sm md:text-lg p-5 md:p-10"
               onSubmit={handleOpeningAndClosingTime}
-            >
+              >
               <label className="font-bold">Select </label>
               <div className="flex flex-col items-center mt-5">
-                <label className="text-green-500" htmlFor="openingTime">
-                  Opening Time
-                </label>
+                <label className="text-green-500" htmlFor="openingTime">Opening Time</label>
                 <input
                   type="time"
                   id="openingTime"
@@ -281,9 +264,7 @@ const DateTimeSettings = () => {
                 />
               </div>
               <div className="flex flex-col items-center mt-5">
-                <label className="text-red-500" htmlFor="closingTime">
-                  Closing Time
-                </label>
+                <label className="text-red-500" htmlFor="closingTime">Closing Time</label>
                 <input
                   type="time"
                   id="closingTime"
@@ -295,7 +276,7 @@ const DateTimeSettings = () => {
               <div className="flex justify-center items-center mt-5">
                 <button
                   type="submit"
-                  className="px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 "
+                  className="px-2 py-1 bg-blue-400 text-white rounded-lg "
                 >
                   Confirm
                 </button>

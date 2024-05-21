@@ -33,6 +33,7 @@ export default async function handleEnquiry(req, res) {
       email,
       contact,
       message,
+      completed: false,
     });
     res.json(enquiryDoc);
     // res.json("post");
@@ -45,6 +46,31 @@ export default async function handleEnquiry(req, res) {
       res.status(500).json({ error: "Failed to fetch Enquiry details." });
     }
   }
+
+  if (method === "PATCH") {
+    try {
+      const { id } = req.query;
+
+      // Find the enquiry by ID
+      const enquiry = await Enquiry.findById(id);
+      if (!enquiry) {
+        return res.status(404).json({ error: "Enquiry not found." });
+      }
+
+      // Toggle the completed status
+      enquiry.completed = !enquiry.completed;
+
+      // Save the updated enquiry
+      const updatedEnquiry = await enquiry.save();
+
+      // Return the updated enquiry
+      res.json(updatedEnquiry);
+    } catch (error) {
+      console.error("Error updating enquiry:", error);
+      res.status(500).json({ error: "Failed to update enquiry." });
+    }
+  }
+
   if (method === "DELETE") {
     if (req.query?.id) {
       await Enquiry.deleteOne({ _id: req.query?.id });

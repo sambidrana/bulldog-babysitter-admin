@@ -8,8 +8,7 @@ import formidable from "formidable";
 
 // import http from "node:http";
 
-const bucketName = "bulldogbabysitter-uploads"; // Ensure this is your bucket name
-
+const bucketName = "bulldogbabysitter-uploads";
 const cors = Cors({
   origin: process.env.NEXT_PUBLIC_CORS_ORIGIN,
   methods: ["POST"],
@@ -38,8 +37,11 @@ export default async function handleUpload(req, res) {
         resolve({ fields, files });
       });
     });
-    // console.log("FILE INFO", files);
+    console.log("field INFO", fields);
+    console.log("FILES INFO", files); //
+
     // Initialize S3 Client with new v3 syntax
+
     const client = new S3Client({
       region: "ap-southeast-2",
       credentials: {
@@ -48,13 +50,39 @@ export default async function handleUpload(req, res) {
       },
     });
 
-    const file = files.file;
-    const originalFilename = file.originalFilename;
-    const fileExtension = originalFilename.split(".").pop();
-    const newFilename =
-      Date.now() + "-" + file.newFilename + "." + fileExtension; // Append the extension to the new file name
+    //sub folder
+    const userId = fields.userID;
 
-    console.log(newFilename);
+    //pet image
+    const petImage = files.petImage;
+    const originalpetImageName = petImage.originalFilename;
+    const fileExtPet = originalpetImageName.split(".").pop();
+    const newPetImageName =
+      Date.now() + "-" + petImage.newFilename + "." + fileExtPet;
+
+    //vaccine image
+    const vaccineImage = files.vaccineImage;
+    const originalVaccineImageName = vaccineImage.originalFilename;
+    const fileExtVaccine = originalVaccineImageName.split(".").pop();
+    const newVaccineImageName =
+      Date.now() + "-" + vaccineImage.newFilename + "." + fileExtVaccine;
+
+    console.log(
+      "newPetImageName: " + newPetImageName,
+      "newVaccineImageName: " + newVaccineImageName
+    );
+
+    /* 
+    // const file = files.file;
+    // const originalFilename = file.originalFilename;
+    // const fileExtension = originalFilename.split(".").pop();
+    // const newFilename =
+    //   Date.now() + "-" + file.newFilename + "." + fileExtension; // Append the extension to the new file name
+    
+    // console.log(newFilename);
+    */
+    /* 
+    
     await client.send(
       new PutObjectCommand({
         Bucket: bucketName,
@@ -64,9 +92,36 @@ export default async function handleUpload(req, res) {
         // ACL: "public-read",
         ContentType: file.mimetype,
       })
-    );
-    const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
-    return res.json({ link });
+      );
+      const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+      return res.json({ link });
+      */
+
+    await Promise.all([
+      client.send(
+        new PutObjectCommand({
+          Bucket: bucketName,
+          Key: `${userId}/petImage/${newPetImageName}`,
+          Body: fs.readFileSync(petImage.filepath),
+          ContentType: petImage.mimetype,
+        })
+      ),
+      client.send(
+        new PutObjectCommand({
+          Bucket: bucketName,
+          Key: `${userId}/vaccineImage/${newVaccineImageName}`,
+          Body: fs.readFileSync(vaccineImage.filepath),
+          ContentType: vaccineImage.mimetype,
+        })
+      ),
+    ]);
+
+    const links = {
+      petImage: `https://${bucketName}.s3.amazonaws.com/${userId}/petImage/${newPetImageName}`,
+      vaccineImage: `https://${bucketName}.s3.amazonaws.com/${userId}/vaccineImage/${newVaccineImageName}`,
+    };
+
+    return res.json({ links });
   }
 }
 

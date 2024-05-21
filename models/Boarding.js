@@ -10,9 +10,12 @@ const BoardingSchema = new Schema(
     petType: { type: String, required: true },
     petAge: { type: String, required: true },
     chipNumber: { type: String },
-    vaccines: { type: String },
+    // vaccines: { type: String },
     petNotes: { type: String },
     imageUrl: {type: String},
+    vaccineUrl: {type: String},
+    bookingCount:{type: Number},
+    totalDaysBooked: {type: Number},
     userId: { type: String, ref: "UserBooking" },
   },
   {

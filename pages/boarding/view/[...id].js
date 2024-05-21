@@ -8,6 +8,7 @@ const View = () => {
   const [memberInfo, setMemberInfo] = useState(null); // Change initial state to null
   const [editMode, setEditMode] = useState(false);
   const [editedInfo, setEditedInfo] = useState({});
+  console.log(memberInfo)
 
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedBoardingId, setSelectedBoardingId] = useState(null);
@@ -182,7 +183,21 @@ const View = () => {
                 )}
               </td>
             </tr>
-
+            <tr className="customTR">
+              <th className=" customTH">Booking History</th>
+              <td className=" customTD">
+                Booked{" "}
+                <span className="text-red-600">
+                  {" "}
+                  {memberInfo.bookingCount}{" "}
+                </span>{" "}
+                time/s and a total of{" "}
+                <span className="text-red-600">
+                  {memberInfo.totalDaysBooked}
+                </span>{" "}
+                days with you.{" "}
+              </td>
+            </tr>
             <tr>
               <td
                 colSpan="100%"
@@ -270,19 +285,17 @@ const View = () => {
             </tr>
 
             <tr className="customTR">
-              <th className=" customTH">Vaccines</th>
+              <th className=" customTH">Vaccine Card</th>
               <td className=" customTD">
-                {editMode ? (
-                  <input
-                    type="text"
-                    name="vaccines"
-                    value={editedInfo.vaccines || memberInfo.vaccines}
-                    onChange={handleInputChange}
-                    className="border p-1"
-                  ></input>
-                ) : (
-                  memberInfo.vaccines
-                )}
+                <div className="p-4 max-w-[500px]">
+                  <a target="_blank" href={memberInfo.vaccineUrl}>
+                    <img
+                      src={memberInfo.vaccineUrl}
+                      alt={"Vaccine Card"}
+                      className="border p-2 bg-white hover:scale-105 transition-transform shadow-lg md:max-w-sm"
+                    />
+                  </a>
+                </div>
               </td>
             </tr>
             <tr className="customTR">

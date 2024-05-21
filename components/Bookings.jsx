@@ -61,6 +61,16 @@ const Bookings = () => {
       header: "End Time",
       cell: (props) => <p>{props.getValue()}</p>,
     },
+    ,
+    {
+      accessorKey: "requirePickup",
+      header: "Pickup ?",
+      cell: (props) => (
+        <p style={{ color: props.getValue() ? "green" : "red" }}>
+          {props.getValue() ? "Yes" : "No"}
+        </p>
+      ),
+    },
     {
       accessorKey: "updatedAt",
       header: "Booked On",
@@ -68,6 +78,20 @@ const Bookings = () => {
         const createdAt = new Date(props.getValue());
         const formattedEndTime = `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`; // Adjust the format as needed
         return <p>{formattedEndTime}</p>;
+      },
+    },
+    {
+      accessorKey: "totalDays",
+      header: "Total Days",
+      cell: (props) => {
+        // console.log(props?.row?.original?.totalHours);
+
+        return (
+          <p className="font-bold">
+            {props.getValue()} days <span className="text-gray-500">and</span>{" "}
+            {props?.row?.original?.totalHours} {props?.row?.original?.totalHours === 1 ? "hour" : "hours"}
+          </p>
+        );
       },
     },
     {
@@ -201,7 +225,10 @@ const Bookings = () => {
           >
             Print Table
           </button>
-          <div className="table text-sm md:text-base" style={{ width: `${table.getTotalSize()}px` }}>
+          <div
+            className="table text-sm md:text-base"
+            style={{ width: `${table.getTotalSize()}px` }}
+          >
             {table.getHeaderGroups().map((headerGroup) => (
               <div className="tr" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

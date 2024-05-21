@@ -18,6 +18,26 @@ function runMiddleware(req, res, fn) {
   });
 }
 
+async function cleanupOldDates() {
+  const currentDate = new Date();
+  const resetDate = new Date(currentDate);
+  resetDate.setDate(currentDate.getDate() - 1);
+  // console.log("Current Date ", currentDate)
+  // console.log("Reset Date ", resetDate)
+
+  try {
+    await DateTimeSettings.updateOne(
+      {},
+      { $pull: { disabledDates: { $lt: resetDate } } }
+    );
+  } catch (error) {
+    console.error("Error during cleanup:", error);
+    throw error; // Ensure the error is handled if cleanup fails
+  }
+}
+
+
+
 export default async function handleSettings(req, res) {
   await runMiddleware(req, res, cors);
 
@@ -34,32 +54,55 @@ export default async function handleSettings(req, res) {
     res.json(settingsDoc);
   }
 
-  try {
-    const { newDisabledDate } = req.body;
-
-    let update;
-    if (Array.isArray(newDisabledDate)) {
-      // If newDisabledDate is an array, add all elements to the set
-      update = { $addToSet: { disabledDates: { $each: newDisabledDate } } };
-    } else {
-      // If newDisabledDate is a single value, add it to the set
-      update = { $addToSet: { disabledDates: newDisabledDate } };
+  if (method === "PUT") {
+    try {
+      const { newDisabledDate } = req.body;
+  
+      let update;
+      if (Array.isArray(newDisabledDate)) {
+        // If newDisabledDate is an array, add all elements to the set
+        update = { $addToSet: { disabledDates: { $each: newDisabledDate } } };
+      } else {
+        // If newDisabledDate is a single value, add it to the set
+        update = { $addToSet: { disabledDates: newDisabledDate } };
+      }
+  
+      const updatedSettings = await DateTimeSettings.findOneAndUpdate(
+        {},
+        update,
+        { new: true, upsert: true }
+      );
+      res.json(updatedSettings);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
+  }
 
-    const updatedSettings = await DateTimeSettings.findOneAndUpdate(
-      {},
-      update,
-      { new: true, upsert: true }
-    );
-    res.json(updatedSettings);
+  
+
+
+  
+/*
+
+
+if (method === "GET") {
+  try {
+    const settings = await DateTimeSettings.find().sort({ createdAt: -1 });
+    res.json(settings);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+}
 
-  if (method === "GET") {
+*/
+
+if (method === "GET") {
     try {
+      // Clean up old dates before returning the settings
+      await cleanupOldDates();
       const settings = await DateTimeSettings.find().sort({ createdAt: -1 });
       res.json(settings);
+      // console.log(settings)
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

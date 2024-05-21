@@ -1,4 +1,5 @@
 import { UserBooking } from "@/models/UserBooking";
+import { Boarding } from "@/models/Boarding";
 import { mongooseConnect } from "@/lib/mongoose";
 import Cors from "cors";
 
@@ -25,14 +26,36 @@ export default async function handleUserBooking(req, res) {
   await mongooseConnect();
   if (method === "POST") {
     try {
-      const { startDate, endDate, startTime, endTime, userId } = req.body;
+      const {
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        requirePickup,
+        totalDays,
+        totalHours,
+        userId,
+      } = req.body;
+      console.log(totalDays);
+
       const userBookingInfo = await UserBooking.create({
         startDate,
         endDate,
         startTime,
         endTime,
+        requirePickup,
+        totalDays,
+        totalHours,
         userId,
       });
+      await Boarding.findOneAndUpdate(
+        { userId: userId },
+        {
+          $inc: { bookingCount: 1, totalDaysBooked: totalDays }, // Increment bookingCount by 1
+          // $inc: { totalDaysBooked: totalDays }, // Increment totalDaysBooked by the new totalDays
+        }
+        // { upsert: true, new: true } // Upsert option creates a new document if it doesn't exist, and new option returns the updated document
+      );
       res.json(userBookingInfo);
     } catch (error) {
       res.status(500).json({ error: "Failed to create User Booking." });
