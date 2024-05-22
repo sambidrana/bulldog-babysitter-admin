@@ -102,8 +102,8 @@ const Enquiries = () => {
   return (
     <>
       <Layout>
-        <div className=" mx-auto overflow-x-auto">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 font-bold p-4 bg-gray-200 rounded-t-lg  tracking-wide">
+        <div className="overflow-x-auto">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 font-bold p-4 bg-gray-200 rounded-t-lg tracking-wide">
             <div className="hidden md:block">Received On</div>
             <div className="hidden md:block">Name</div>
             <div className="hidden md:block">Phone</div>
@@ -146,24 +146,24 @@ const Enquiries = () => {
                 <div className="font-sans break-words md:col-span-6 p-2 ">
                   {item.message}
                 </div>
-                <div className="grid grid-flow-col place-content-end md:col-span-6 mt-10 mb-4 gap-4  ">
+                <div className="grid  place-content-end grid-flow-col md:col-span-6 mt-10 mb-4  m-auto">
                   {item.completed ? (
-                    <div className="w-[100px] md:w-[150px]"></div>
+                    <div className="w-[90px] md:w-[150px]"></div>
                   ) : (
-                    <div className="font-sans text-center md:p-4 ">
+                    <div className="font-sans text-center p-2 md:p-4 ">
                       <button
                         onClick={() => handleEnquiryComplete(item._id)}
-                        className="w-[100px] md:w-[150px] px-3 py-1 bg-green-500 rounded-md text-white tracking-wide hover:bg-green-600 drop-shadow-lg"
+                        className="w-[90px] md:w-[150px] px-3 py-1 bg-green-500 rounded-md text-white tracking-wide hover:bg-green-600 drop-shadow-lg"
                       >
                         Complete
                       </button>
                     </div>
                   )}
-                  <div className="font-sans text-center md:p-4  ">
+                  <div className="font-sans text-center p-2 md:p-4  ">
                     {" "}
                     <button
                       onClick={() => handleEnquiryDelete(item._id)}
-                      className="w-[100px] md:w-[150px] px-3 py-1 bg-red-500 rounded-md text-white tracking-wide hover:bg-red-600 drop-shadow-lg"
+                      className="w-[90px] md:w-[150px] px-3 py-1 bg-red-500 rounded-md text-white tracking-wide hover:bg-red-600 drop-shadow-lg"
                     >
                       Delete
                     </button>
