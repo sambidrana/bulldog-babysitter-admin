@@ -64,7 +64,8 @@ const Bookings = () => {
     ,
     {
       accessorKey: "requirePickup",
-      header: "Pickup ?",
+      size: 110,
+      header: "Pickup?",
       cell: (props) => (
         <p style={{ color: props.getValue() ? "green" : "red" }}>
           {props.getValue() ? "Yes" : "No"}

@@ -146,8 +146,19 @@ const Enquiries = () => {
                 <div className="font-sans break-words md:col-span-6 p-2 ">
                   {item.message}
                 </div>
-
-                <div className="grid grid-flow-col md:col-span-6 mt-10  mb-4  ">
+                <div className="grid grid-flow-col place-content-end md:col-span-6 mt-10 mb-4 gap-4  ">
+                  {item.completed ? (
+                    <div className="w-[100px] md:w-[150px]"></div>
+                  ) : (
+                    <div className="font-sans text-center md:p-4 ">
+                      <button
+                        onClick={() => handleEnquiryComplete(item._id)}
+                        className="w-[100px] md:w-[150px] px-3 py-1 bg-green-500 rounded-md text-white tracking-wide hover:bg-green-600 drop-shadow-lg"
+                      >
+                        Complete
+                      </button>
+                    </div>
+                  )}
                   <div className="font-sans text-center md:p-4  ">
                     {" "}
                     <button
@@ -157,20 +168,7 @@ const Enquiries = () => {
                       Delete
                     </button>
                   </div>
-                  {item.completed ? (
-                    <div className="w-[100px] md:w-[150px]"></div>
-                  ) : (
-                    <div className="font-sans text-center md:p-4 ">
-                    <button
-                        onClick={() => handleEnquiryComplete(item._id)}
-                        className="w-[100px] md:w-[150px] px-3 py-1 bg-green-500 rounded-md text-white tracking-wide hover:bg-green-600 drop-shadow-lg"
-                      >
-                        Complete
-                      </button>
-                    </div>
-                  )}
                 </div>
-
               </div>
             ))
           ) : (

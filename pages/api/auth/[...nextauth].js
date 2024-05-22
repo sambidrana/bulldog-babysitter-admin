@@ -23,5 +23,10 @@ export default NextAuth({
       }
       return false;
     },
+    
+  },
+  session: {
+    jwt: true,
+    maxAge: 2160, // 1 1/2 day
   },
 });
