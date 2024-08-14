@@ -8,7 +8,7 @@ const BoardingSchema = new Schema(
     email: { type: String, required: true },
     petName: { type: String, required: true },
     petType: { type: String, required: true },
-    petAge: { type: String, required: true },
+    petAge: { type: Date, required: true },
     chipNumber: { type: String },
     // vaccines: { type: String },
     petNotes: { type: String },

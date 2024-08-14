@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 const View = () => {
-  const [memberInfo, setMemberInfo] = useState(null); // Change initial state to null
+  const [memberInfo, setMemberInfo] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [editedInfo, setEditedInfo] = useState({});
 
@@ -91,7 +91,6 @@ const View = () => {
       </>
     );
   }
-  
 
   if (loading) {
     return <div>Loading...</div>;
@@ -100,6 +99,32 @@ const View = () => {
   const handleGoBack = () => {
     router.back();
   };
+
+  const calculatePetAge = (birthDate) => {
+    const birth = new Date(birthDate);
+    const today = new Date();
+  
+    let years = today.getFullYear() - birth.getFullYear();
+    let months = today.getMonth() - birth.getMonth();
+  
+    // Adjust the year if the birth date hasn't occurred yet this year
+    if (
+      months < 0 ||
+      (months === 0 && today.getDate() < birth.getDate())
+    ) {
+      years--;
+      months += 12; // Adjust the months when we subtract a year
+    }
+  
+    // Adjust the month if the day hasn't occurred this month
+    if (today.getDate() < birth.getDate()) {
+      months--;
+    }
+  
+    return { years, months };
+  };
+  
+  const petAge = memberInfo?.petAge ? calculatePetAge(memberInfo.petAge) : null;
 
   // For Delete Action
   const handleDelete = async () => {
@@ -282,7 +307,10 @@ const View = () => {
                         className="border p-1"
                       ></input>
                     ) : (
-                      memberInfo.petAge
+                      // memberInfo.petAge
+                      // `${memberInfo.petAge} (${petAge} years old)`
+                      petAge && `${memberInfo.petAge} (${petAge.years} years and ${petAge.months} months old)`
+
                     )}
                   </td>
                 </tr>

@@ -146,7 +146,7 @@ const Enquiries = () => {
                 <div className="font-sans break-words md:col-span-6 p-2 ">
                   {item.message}
                 </div>
-                <div className="grid  place-content-end grid-flow-col md:col-span-6 mt-10 mb-4  m-auto">
+                <div className="grid place-content-end grid-flow-col md:w-full md:col-span-6 mt-10 mb-4  m-auto">
                   {item.completed ? (
                     <div className="w-[90px] md:w-[150px]"></div>
                   ) : (
