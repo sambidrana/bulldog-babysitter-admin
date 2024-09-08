@@ -93,7 +93,7 @@ const View = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Layout>Loading...</Layout>;
   }
 
   const handleGoBack = () => {
@@ -125,6 +125,7 @@ const View = () => {
   };
   
   const petAge = memberInfo?.petAge ? calculatePetAge(memberInfo.petAge) : null;
+  console.log(memberInfo.petAge)
 
   // For Delete Action
   const handleDelete = async () => {
@@ -296,7 +297,7 @@ const View = () => {
                   </td>
                 </tr>
                 <tr className="customTR">
-                  <th className=" customTH">Pet Age</th>
+                  <th className=" customTH">D.O.B</th>
                   <td className=" customTD">
                     {editMode ? (
                       <input
@@ -309,7 +310,7 @@ const View = () => {
                     ) : (
                       // memberInfo.petAge
                       // `${memberInfo.petAge} (${petAge} years old)`
-                      petAge && `${memberInfo.petAge} (${petAge.years} years and ${petAge.months} months old)`
+                      petAge && `${memberInfo.petAge.split("T")[0]} (${petAge.years} years and ${petAge.months} months old)`
 
                     )}
                   </td>
