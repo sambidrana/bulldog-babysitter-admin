@@ -3,10 +3,13 @@ import { Boarding } from "@/models/Boarding";
 import { mongooseConnect } from "@/lib/mongoose";
 import Cors from "cors";
 import nodemailer from "nodemailer";
+import dayjs from "dayjs"; // Import dayjs
+
+// import mongoose from "mongoose";
 
 const cors = Cors({
-  origin: process.env.NEXT_PUBLIC_CORS_ORIGIN, // specify the origin you want to allow
-  methods: ["GET", "POST", "DELETE"], // specify the methods you want to allow
+  origin: process.env.NEXT_PUBLIC_CORS_ORIGIN,
+  methods: ["GET", "POST", "PUT", "DELETE"],
 });
 
 function runMiddleware(req, res, fn) {
@@ -37,32 +40,25 @@ async function sendBookingConfirmationEmail(userEmail, booking) {
     html: `
       <p>Hello,</p>
       <p>Your booking has been confirmed! 🎉</p><br/>
-      
       <table width="100%" border="0" cellspacing="0" cellpadding="5">
-      <tr>
-        <td align="left"><strong>📅 Start Date:</strong> ${
-          booking.startDate
-        }</td>
-        <td align="left"><strong>📅 End Date:</strong> ${booking.endDate}</td>
-      </tr>
-      <tr>
-        <td align="left"><strong>🕒 Time:</strong> ${booking.startTime} - ${
+        <tr>
+          <td align="left"><strong>📅 Start Date:</strong> ${
+            booking.startDate
+          }</td>
+          <td align="left"><strong>📅 End Date:</strong> ${booking.endDate}</td>
+        </tr>
+        <tr>
+          <td align="left"><strong>🕒 Time:</strong> ${booking.startTime} - ${
       booking.endTime
     }</td>
-        <td align="left"><strong>🚗 Pickup Required:</strong> ${
-          booking.requirePickup ? "Yes" : "No"
-        }</td>
-      </tr>
-    </table>
-
-
+          <td align="left"><strong>🚗 Pickup Required:</strong> ${
+            booking.requirePickup ? "Yes" : "No"
+          }</td>
+        </tr>
+      </table>
       <br/><p>Thank you for booking with The Bulldog Babysitter! 🐶</p>
-
       <br/><p>Best,<br/>Jacki and John</p>
-
-
       <br/><p style="color: red;"><strong>📌  Please note:</strong> If you haven't boarded with us before, your booking may be subject to review and potential cancellation.</p>
-
     `,
   };
 
@@ -87,19 +83,13 @@ export default async function handleUserBooking(req, res) {
         totalHours,
         userId,
       } = req.body;
-      // console.log(totalDays);
-
-      //  Fetch user's email from Boarding collection
       const boardingInfo = await Boarding.findOne({ userId });
-
       if (!boardingInfo) {
         return res
           .status(404)
           .json({ error: "User boarding information not found." });
       }
-
       const userEmail = boardingInfo.email;
-
       const userBookingInfo = await UserBooking.create({
         startDate,
         endDate,
@@ -112,20 +102,15 @@ export default async function handleUserBooking(req, res) {
       });
       await Boarding.findOneAndUpdate(
         { userId: userId },
-        {
-          $inc: { bookingCount: 1, totalDaysBooked: totalDays }, // Increment bookingCount by 1
-          // $inc: { totalDaysBooked: totalDays }, // Increment totalDaysBooked by the new totalDays
-        }
-        // { upsert: true, new: true } // Upsert option creates a new document if it doesn't exist, and new option returns the updated document
+        { $inc: { bookingCount: 1, totalDaysBooked: totalDays } }
       );
-
       // await sendBookingConfirmationEmail(userEmail, userBookingInfo);
-
       res.json(userBookingInfo);
     } catch (error) {
       res.status(500).json({ error: "Failed to create User Booking." });
     }
   }
+
   if (method === "GET") {
     try {
       if (req.query?.id) {
@@ -137,6 +122,65 @@ export default async function handleUserBooking(req, res) {
       res.status(500).json({ error: "Failed to fetch boarding details." });
     }
   }
+
+  if (method === "PATCH") {
+    try {
+      // Extract 'id' and the rest of the fields from req.body
+      const { id, startDate, endDate, startTime, endTime, ...updateData } =
+        req.body;
+      // console.log(
+      //   `Line 131 : id: ${id}, updateData: ${JSON.stringif(updateData)}`
+      // );
+      console.log(
+        `Line 132 : startDate: ${startDate}, endDate: ${endDate}, startTime: ${startTime}, endTime: ${endTime}`
+      );
+
+      const formattedStartDate = dayjs(startDate, "YYYY-MM-DD").format(
+        "DD/MM/YYYY"
+      );
+      const formattedEndDate = dayjs(endDate, "YYYY-MM-DD").format(
+        "DD/MM/YYYY"
+      );
+      const formattedStartTime = dayjs(startTime, "HH:mm").isValid()
+        ? dayjs(startTime, "HH:mm").format("HH:mm")
+        : startTime;
+      const formattedEndTime = dayjs(endTime, "HH:mm").isValid()
+        ? dayjs(endTime, "HH:mm").format("HH:mm")
+        : endTime;
+
+      console.log(
+        `Line 139 : formattedStartDate: ${formattedStartDate}, formattedEndDate: ${formattedEndDate}, formattedStartTime: ${formattedStartTime}, formattedEndTime: ${formattedEndTime}`
+      );
+
+      // Include the formatted values in updateData
+      updateData.startDate = formattedStartDate;
+      updateData.endDate = formattedEndDate;
+      updateData.startTime = formattedStartTime;
+      updateData.endTime = formattedEndTime;
+
+      const updateBooking = await UserBooking.findByIdAndUpdate(
+        id,
+        updateData,
+        {
+          new: true,
+        }
+      );
+
+      if (!updateBooking) {
+        return res
+          .status(404)
+          .json({ error: "Error updating booking, please try again later" });
+      }
+
+      // Send back the updated booking data as the response
+      return res.json(updateBooking); // This sends the updated data back to the client
+    } catch (error) {
+      console.error("Error in PATCH handler:", error.message);
+      console.error(error.stack); // Log the stack trace
+      res.status(500).json({ error: "Failed to update booking details." });
+    }
+  }
+
   if (method === "DELETE") {
     if (req.query?.id) {
       await UserBooking.deleteOne({ _id: req.query?.id });
@@ -144,3 +188,34 @@ export default async function handleUserBooking(req, res) {
     }
   }
 }
+
+// if (method === "PUT") {
+//   try {
+//     const { id } = req.query;
+//     console.log("Received booking ID:", id);
+
+//     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+//       return res.status(400).json({ error: "Invalid Booking ID" });
+//     }
+
+//     const objectId = new mongoose.Types.ObjectId(id); // Convert to ObjectId
+//     const updateData = req.body;
+
+//     const updatedBooking = await UserBooking.findByIdAndUpdate(objectId, updateData, { new: true });
+
+//     if (!updatedBooking) {
+//       return res.status(404).json({ error: "Booking not found" });
+//     }
+
+//     const boardingInfo = await Boarding.findOne({ userId: updatedBooking.userId });
+
+//     if (boardingInfo) {
+//       await sendBookingConfirmationEmail(boardingInfo.email, updatedBooking);
+//     }
+
+//     res.json(updatedBooking);
+//   } catch (error) {
+//     console.error("Error updating booking:", error);
+//     res.status(500).json({ error: "Failed to update booking" });
+//   }
+// }

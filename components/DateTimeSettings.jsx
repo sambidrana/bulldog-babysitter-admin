@@ -149,7 +149,7 @@ const DateTimeSettings = () => {
   }, []);
   return (
     <>
-      <div className="text-gray-80000">
+      <div className="text-gray-800">
         <h1 className="text-sm md:text-xl text-center md:text-start font-serif font-bold p-2 mb-4 md:mb-10 ">
           Settings
         </h1>

@@ -23,6 +23,87 @@ const Bookings = () => {
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const [isPrinting, setIsPrinting] = useState(false);
 
+  const [editRowId, setEditRowId] = useState(null);
+  const [editedData, setEditedData] = useState({});
+
+  useEffect(() => {
+    // Fetch user bookings
+    axios
+      .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings`)
+      // .get(`http://localhost:3000/api/userbookings`)
+      .then((res) => {
+        const bookingData = res.data;
+        setBookings(bookingData);
+
+        // Fetch user information and create a mapping by userId
+        axios
+          .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding`)
+          .then((res) => {
+            setBoarding(res.data);
+            // console.log(boarding);
+          })
+          .catch((error) => {
+            console.error("Error fetching user information:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching user bookings:", error);
+      });
+  }, []);
+
+  //Edit functionality
+  const handleInputChange = (bookingId, field, value) => {
+    setEditedData((prev) => ({
+      ...prev,
+      [bookingId]: {
+        ...prev[bookingId],
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleSave = async (bookingId) => {
+    try {
+      const updatedBooking = editedData[bookingId];
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings/${bookingId}`,
+        updatedBooking
+      );
+
+      setBookings((prevBookings) =>
+        prevBookings.map((booking) =>
+          booking._id === bookingId
+            ? { ...booking, ...updatedBooking }
+            : booking
+        )
+      );
+      setEditRowId(null);
+    } catch (error) {
+      console.error("Error updating booking:", error);
+    }
+  };
+
+  // Function to associate bookings with boarding details
+  function associateBookingsWithBoarding(bookings, boarding) {
+    return bookings.map((booking) => {
+      const associatedBoarding =
+        boarding.find((b) => b.userId === booking.userId) || null;
+
+      const { firstName, lastName, petName, _id } = associatedBoarding || {};
+      const bookingId = booking._id;
+
+      return { ...booking, firstName, lastName, petName, _id, bookingId };
+    });
+  }
+
+  useEffect(() => {
+    const updatedBookingsWithBoarding = associateBookingsWithBoarding(
+      bookings,
+      boarding
+    );
+    setBookingsWithBoarding(updatedBookingsWithBoarding);
+  }, [bookings, boarding]);
+
   const columns = [
     {
       accessorKey: "firstName",
@@ -90,7 +171,8 @@ const Bookings = () => {
         return (
           <p className="font-bold">
             {props.getValue()} days <span className="text-gray-500">and</span>{" "}
-            {props?.row?.original?.totalHours} {props?.row?.original?.totalHours === 1 ? "hour" : "hours"}
+            {props?.row?.original?.totalHours}{" "}
+            {props?.row?.original?.totalHours === 1 ? "hour" : "hours"}
           </p>
         );
       },
@@ -107,53 +189,28 @@ const Bookings = () => {
         </button>
       ),
     },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Link
+          href={{
+            pathname: `/userbookings/edit/${row.original.bookingId}`,
+            query: {
+              firstName: row.original.firstName,
+              lastName: row.original.lastName,
+              petName: row.original.petName,
+            },
+          }}
+          passHref
+        >
+          <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
+            Edit
+          </button>
+        </Link>
+      ),
+    },
   ];
-
-  useEffect(() => {
-    // Fetch user bookings
-    axios
-      .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings`)
-      // .get(`http://localhost:3000/api/userbookings`)
-      .then((res) => {
-        const bookingData = res.data;
-        setBookings(bookingData);
-
-        // Fetch user information and create a mapping by userId
-        axios
-          .get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/boarding`)
-          .then((res) => {
-            setBoarding(res.data);
-            // console.log(boarding);
-          })
-          .catch((error) => {
-            console.error("Error fetching user information:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error fetching user bookings:", error);
-      });
-  }, []);
-
-  // Function to associate bookings with boarding details
-  function associateBookingsWithBoarding(bookings, boarding) {
-    return bookings.map((booking) => {
-      const associatedBoarding =
-        boarding.find((b) => b.userId === booking.userId) || null;
-
-      const { firstName, lastName, petName, _id } = associatedBoarding || {};
-      const bookingId = booking._id;
-
-      return { ...booking, firstName, lastName, petName, _id, bookingId };
-    });
-  }
-
-  useEffect(() => {
-    const updatedBookingsWithBoarding = associateBookingsWithBoarding(
-      bookings,
-      boarding
-    );
-    setBookingsWithBoarding(updatedBookingsWithBoarding);
-  }, [bookings, boarding]);
 
   const table = useReactTable({
     data: bookingsWithBoarding,
