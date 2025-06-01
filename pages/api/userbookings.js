@@ -48,9 +48,10 @@ async function sendBookingConfirmationEmail(userEmail, booking) {
           <td align="left"><strong>📅 End Date:</strong> ${booking.endDate}</td>
         </tr>
         <tr>
-          <td align="left"><strong>🕒 Time:</strong> ${booking.startTime} - ${
-      booking.endTime
-    }</td>
+        <td align="left"><strong>🕒 Start Time:</strong> ${booking.startTime}
+        <td align="left"><strong>🕒 End Time:</strong>  ${booking.endTime}
+        </tr>
+        <tr>
           <td align="left"><strong>🚗 Pickup Required:</strong> ${
             booking.requirePickup ? "Yes" : "No"
           }</td>
@@ -59,6 +60,35 @@ async function sendBookingConfirmationEmail(userEmail, booking) {
       <br/><p>Thank you for booking with The Bulldog Babysitter! 🐶</p>
       <br/><p>Best,<br/>Jacki and John</p>
       <br/><p style="color: red;"><strong>📌  Please note:</strong> If you haven't boarded with us before, your booking may be subject to review and potential cancellation.</p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+async function sendEditedConfirmationEmail(userEmail, booking) {
+  let mailOptions = {
+    from: process.env.WORK_EMAIL,
+    to: userEmail,
+    subject: "Booking Date/Time Changed - The Bulldog Babysitter",
+    html: `
+      <p>Hello,</p>
+      <p>Your booking date and/or time has been changed with the Bulldog Babysitter! Please reach out to us if the new date/time needs to be discussed with us </p><br/>
+      <table width="100%" border="0" cellspacing="0" cellpadding="5">
+        <tr>
+          <td align="left"><strong>📅 Start Date:</strong> ${booking.startDate}</td>
+          <td align="left"><strong>📅 End Date:</strong> ${booking.endDate}</td>
+        </tr>
+        <tr>
+          <td align="left"><strong>🕒 Start Time:</strong> ${booking.startTime}
+          <td align="left"><strong>🕒 End Time:</strong>  ${booking.endTime}
+
+        </tr>
+
+
+      </table>
+      <br/><p>Thank you for booking with The Bulldog Babysitter! 🐶</p>
+      <br/><p>Best,<br/>Jacki and John</p>
     `,
   };
 
@@ -104,7 +134,7 @@ export default async function handleUserBooking(req, res) {
         { userId: userId },
         { $inc: { bookingCount: 1, totalDaysBooked: totalDays } }
       );
-      // await sendBookingConfirmationEmail(userEmail, userBookingInfo);
+      await sendBookingConfirmationEmail(userEmail, userBookingInfo);
       res.json(userBookingInfo);
     } catch (error) {
       res.status(500).json({ error: "Failed to create User Booking." });
@@ -170,6 +200,14 @@ export default async function handleUserBooking(req, res) {
         return res
           .status(404)
           .json({ error: "Error updating booking, please try again later" });
+      }
+
+      // 📧 Send email to user after successful update
+      const boardingInfo = await Boarding.findOne({
+        userId: updateBooking.userId,
+      });
+      if (boardingInfo) {
+        await sendEditedConfirmationEmail(boardingInfo.email, updateBooking);
       }
 
       // Send back the updated booking data as the response
