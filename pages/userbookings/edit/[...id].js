@@ -54,15 +54,46 @@ const ViewBooking = () => {
     }
   };
 
+  // const handleSave = async () => {
+  //   console.log(editedInfo);
+  //   console.log(bookingInfo._id);
+
+  //   try {
+  //     const response = await axios.patch(
+  //       `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings?id=${id}`,
+  //       {
+  //         ...editedInfo,
+  //         id: bookingInfo._id,
+  //       }
+  //     );
+  //     setBookingInfo(response.data);
+  //     setEditMode(false);
+  //   } catch (error) {
+  //     console.error("Failed to save booking info:", error.message);
+  //   }
+  // };
+
   const handleSave = async () => {
     console.log(editedInfo);
     console.log(bookingInfo._id);
 
+    // Filter only the fields that were changed
+    const filteredEdits = {};
+    for (const key in editedInfo) {
+      if (
+        editedInfo[key] !== "" &&
+        editedInfo[key] !== null &&
+        editedInfo[key] !== bookingInfo[key]
+      ) {
+        filteredEdits[key] = editedInfo[key];
+      }
+    }
+
     try {
       const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings?id=${id}`,
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/userbookings?id=${bookingInfo._id}`,
         {
-          ...editedInfo,
+          ...filteredEdits,
           id: bookingInfo._id,
         }
       );

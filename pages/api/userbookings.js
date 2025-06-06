@@ -4,6 +4,9 @@ import { mongooseConnect } from "@/lib/mongoose";
 import Cors from "cors";
 import nodemailer from "nodemailer";
 import dayjs from "dayjs"; // Import dayjs
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 // import mongoose from "mongoose";
 
@@ -155,67 +158,59 @@ export default async function handleUserBooking(req, res) {
 
   if (method === "PATCH") {
     try {
-      // Extract 'id' and the rest of the fields from req.body
-      const { id, startDate, endDate, startTime, endTime, ...updateData } =
-        req.body;
-      // console.log(
-      //   `Line 131 : id: ${id}, updateData: ${JSON.stringif(updateData)}`
-      // );
-      console.log(
-        `Line 132 : startDate: ${startDate}, endDate: ${endDate}, startTime: ${startTime}, endTime: ${endTime}`
-      );
+      const { id, ...rawData } = req.body;
+      console.log("🔥 RAW req.body:", req.body);
+      console.log("🔍 rawData.endTime:", rawData.endTime);
 
-      const formattedStartDate = dayjs(startDate, "YYYY-MM-DD").format(
-        "DD/MM/YYYY"
-      );
-      const formattedEndDate = dayjs(endDate, "YYYY-MM-DD").format(
-        "DD/MM/YYYY"
-      );
-      const formattedStartTime = dayjs(startTime, "HH:mm").isValid()
-        ? dayjs(startTime, "HH:mm").format("HH:mm")
-        : startTime;
-      const formattedEndTime = dayjs(endTime, "HH:mm").isValid()
-        ? dayjs(endTime, "HH:mm").format("HH:mm")
-        : endTime;
+      console.log("🧪 dayjs valid?", dayjs(rawData.endTime, "HH:mm", true).isValid());
 
-      console.log(
-        `Line 139 : formattedStartDate: ${formattedStartDate}, formattedEndDate: ${formattedEndDate}, formattedStartTime: ${formattedStartTime}, formattedEndTime: ${formattedEndTime}`
-      );
-
-      // Include the formatted values in updateData
-      updateData.startDate = formattedStartDate;
-      updateData.endDate = formattedEndDate;
-      updateData.startTime = formattedStartTime;
-      updateData.endTime = formattedEndTime;
-
-      const updateBooking = await UserBooking.findByIdAndUpdate(
-        id,
-        updateData,
-        {
-          new: true,
-        }
-      );
-
-      if (!updateBooking) {
-        return res
-          .status(404)
-          .json({ error: "Error updating booking, please try again later" });
+      const updateData = {};
+  
+      // Format and assign only if values exist
+      if (rawData.startDate) {
+        updateData.startDate = dayjs(rawData.startDate, "YYYY-MM-DD").format("DD/MM/YYYY");
       }
-
-      // 📧 Send email to user after successful update
-      const boardingInfo = await Boarding.findOne({
-        userId: updateBooking.userId,
+  
+      if (rawData.endDate) {
+        updateData.endDate = dayjs(rawData.endDate, "YYYY-MM-DD").format("DD/MM/YYYY");
+      }
+  
+      if (rawData.startTime && dayjs(rawData.startTime, "HH:mm", true).isValid()) {
+        updateData.startTime = dayjs(rawData.startTime, "HH:mm").format("HH:mm");
+      }
+  
+      if (rawData.endTime && dayjs(rawData.endTime, "HH:mm", true).isValid()) {
+        updateData.endTime = dayjs(rawData.endTime, "HH:mm").format("HH:mm");
+      }
+  
+      // Add other fields as-is (e.g., requirePickup, totalHours, etc.)
+      Object.keys(rawData).forEach((key) => {
+        if (!["startDate", "endDate", "startTime", "endTime"].includes(key)) {
+          updateData[key] = rawData[key];
+        }
       });
+  
+      console.log("✅ Final updateData before DB save:", updateData);
+  
+      const updateBooking = await UserBooking.findByIdAndUpdate(id, updateData, {
+        new: true,
+      });
+  
+      if (!updateBooking) {
+        return res.status(404).json({ error: "Error updating booking, please try again later" });
+      }
+  
+      const boardingInfo = await Boarding.findOne({ userId: updateBooking.userId });
+  
       if (boardingInfo) {
         await sendEditedConfirmationEmail(boardingInfo.email, updateBooking);
       }
-
-      // Send back the updated booking data as the response
-      return res.json(updateBooking); // This sends the updated data back to the client
+  
+      return res.json(updateBooking);
     } catch (error) {
       console.error("Error in PATCH handler:", error.message);
-      console.error(error.stack); // Log the stack trace
-      res.status(500).json({ error: "Failed to update booking details." });
+      console.error(error.stack);
+      return res.status(500).json({ error: "Failed to update booking details." });
     }
   }
 
