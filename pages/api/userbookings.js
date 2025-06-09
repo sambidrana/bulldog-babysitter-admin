@@ -189,6 +189,28 @@ function isBookingDateInvalid(start, end, disabledDates) {
   return false; // No conflict
 }
 
+function calculateDaysAndHours(startDate, startTime, endDate, endTime) {
+  const parse = (d, t) => {
+    const [day, month, year] = d.split("/");
+    const [hour, minute] = t.split(":");
+    return new Date(year, month - 1, day, hour, minute).getTime();
+  };
+
+  const start = parse(startDate, startTime);
+  const end = parse(endDate, endTime);
+  const diff = end - start;
+
+  const millisecondsInDay = 1000 * 60 * 60 * 24;
+  const millisecondsInHour = 1000 * 60 * 60;
+
+  const totalDays = Math.floor(diff / millisecondsInDay);
+  const totalHours = Math.floor(
+    (diff % millisecondsInDay) / millisecondsInHour
+  );
+
+  return { totalDays, totalHours };
+}
+
 export default async function handleUserBooking(req, res) {
   await runMiddleware(req, res, cors);
 
@@ -269,12 +291,6 @@ export default async function handleUserBooking(req, res) {
     try {
       const { id, ...rawData } = req.body;
       console.log("🔥 RAW req.body:", req.body);
-      console.log("🔍 rawData.endTime:", rawData.endTime);
-
-      console.log(
-        "🧪 dayjs valid?",
-        dayjs(rawData.endTime, "HH:mm", true).isValid()
-      );
 
       const updateData = {};
 
@@ -304,12 +320,59 @@ export default async function handleUserBooking(req, res) {
         updateData.endTime = dayjs(rawData.endTime, "HH:mm").format("HH:mm");
       }
 
-      // Add other fields as-is (e.g., requirePickup, totalHours, etc.)
+      // Add other fields as-is (e.g., requirePickup)
       Object.keys(rawData).forEach((key) => {
         if (!["startDate", "endDate", "startTime", "endTime"].includes(key)) {
           updateData[key] = rawData[key];
         }
       });
+
+      // 👉 Recalculate totalDays and totalHours if date/time has changed
+      const hasDateOrTimeChanged =
+        updateData.startDate ||
+        updateData.endDate ||
+        updateData.startTime ||
+        updateData.endTime;
+
+      if (hasDateOrTimeChanged) {
+        const existingBooking = await UserBooking.findById(id);
+        const finalStartDate =
+          updateData.startDate || existingBooking.startDate;
+        const finalEndDate = updateData.endDate || existingBooking.endDate;
+        const finalStartTime =
+          updateData.startTime || existingBooking.startTime;
+        const finalEndTime = updateData.endTime || existingBooking.endTime;
+
+        // Calculate totalDays and totalHours
+        const parse = (d, t) => {
+          const [day, month, year] = d.split("/");
+          const [hour, minute] = t.split(":");
+          return new Date(year, month - 1, day, hour, minute).getTime();
+        };
+
+        const start = parse(finalStartDate, finalStartTime);
+        const end = parse(finalEndDate, finalEndTime);
+        const diff = end - start;
+
+        const millisecondsInDay = 1000 * 60 * 60 * 24;
+        const millisecondsInHour = 1000 * 60 * 60;
+
+        const totalDays = Math.floor(diff / millisecondsInDay);
+        const totalHours = Math.floor(
+          (diff % millisecondsInDay) / millisecondsInHour
+        );
+
+        updateData.totalDays = totalDays;
+        updateData.totalHours = totalHours;
+
+        console.log(
+          "📅 Recalculated:",
+          totalDays,
+          "days and",
+          totalHours,
+          "hours"
+        );
+      }
 
       console.log("✅ Final updateData before DB save:", updateData);
 
@@ -352,63 +415,3 @@ export default async function handleUserBooking(req, res) {
     }
   }
 }
-
-// if (method === "PUT") {
-//   try {
-//     const { id } = req.query;
-//     console.log("Received booking ID:", id);
-
-//     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-//       return res.status(400).json({ error: "Invalid Booking ID" });
-//     }
-
-//     const objectId = new mongoose.Types.ObjectId(id); // Convert to ObjectId
-//     const updateData = req.body;
-
-//     const updatedBooking = await UserBooking.findByIdAndUpdate(objectId, updateData, { new: true });
-
-//     if (!updatedBooking) {
-//       return res.status(404).json({ error: "Booking not found" });
-//     }
-
-//     const boardingInfo = await Boarding.findOne({ userId: updatedBooking.userId });
-
-//     if (boardingInfo) {
-//       await sendBookingConfirmationEmail(boardingInfo.email, updatedBooking);
-//     }
-
-//     res.json(updatedBooking);
-//   } catch (error) {
-//     console.error("Error updating booking:", error);
-//     res.status(500).json({ error: "Failed to update booking" });
-//   }
-// }
-
-/*
-isBookingDateInvalid logic
-
-const startDate = dayjs(start, "DD/MM/YYYY").startOf("day");
-  const endDate = dayjs(end, "DD/MM/YYYY").startOf("day");
-
-  console.log("Booking Range:", startDate.format("YYYY-MM-DD"), "to", endDate.format("YYYY-MM-DD"));
-
-  // Convert all disabledDates to 'YYYY-MM-DD' strings for quick lookup
-  const disabledSet = new Set(disabledDates.map(d => dayjs(d).format("YYYY-MM-DD")));
-
-  let current = startDate;
-
-  while (current.isSameOrBefore(endDate)) {
-    const dateStr = current.format("YYYY-MM-DD");
-    console.log("Checking booking day:", dateStr);
-
-    if (disabledSet.has(dateStr)) {
-      console.log("❌ Conflict: booking includes disabled date", dateStr);
-      return true;
-    }
-
-    current = current.add(1, 'day');
-  }
-
-  console.log("✅ No conflict in booking range.");
-  return false;
-*/

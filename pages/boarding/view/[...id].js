@@ -252,11 +252,11 @@ const View = () => {
                       {" "}
                       {memberInfo.bookingCount}{" "}
                     </span>{" "}
-                    time/s and a total of{" "}
-                    <span className="text-red-600">
+                    time/s with you.{" "}
+                    {/* <span className="text-red-600">
                       {memberInfo.totalDaysBooked}
                     </span>{" "}
-                    days with you.{" "}
+                    days with you.{" "} */}
                   </td>
                 </tr>
                 <tr>
