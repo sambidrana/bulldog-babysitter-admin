@@ -12,7 +12,7 @@ export default function Layout({ children }) {
             <div className="p-6">
               <Image
                 className="p-8 rounded-full overflow-hidden border-x-8"
-                src={"/logo1.png"}
+                src={"/logo4.png"}
                 width={350}
                 height={350}
                 alt="The Bulldog Babysitter"
